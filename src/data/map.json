@@ -1,0 +1,725 @@
+[{
+    "Region": {
+        "Oceania": [
+            "Australia",
+            "New Zealand",
+            "Rest of Oceania"
+        ],
+        "East Asia": [
+            "China",
+            "Hong Kong",
+            "Japan",
+            "Korea",
+            "Taiwan",
+            "Rest of East Asia"
+        ],
+        "Southeast Asia": [
+            "Cambodia",
+            "Indonesia",
+            "Lao People's Democratic Republic",
+            "Malaysia",
+            "Philippines",
+            "Singapore",
+            "Thailand",
+            "Viet Nam",
+            "Rest of Southeast Asia"
+        ],
+        "South Asia": [
+            "Bangladesh",
+            "India",
+            "Pakistan",
+            "Sri Lanka",
+            "Rest of South Asia"
+        ],
+        "North America": [
+            "Canada",
+            "United States of America",
+            "Mexico",
+            "Rest of North America"
+        ],
+        "South America": [
+            "Argentina",
+            "Bolivia",
+            "Brazil",
+            "Chile",
+            "Colombia",
+            "Ecuador",
+            "Paraguay",
+            "Peru",
+            "Uruguay",
+            "Venezuela",
+            "Rest of South America"
+        ],
+        "Central America": [
+            "Costa Rica",
+            "Guatemala",
+            "Nicaragua",
+            "Panama",
+            "Rest of Central America"
+        ],
+        "Caribbean": [
+            "Caribbean"
+        ],
+        "EFTA": [
+            "Austria",
+            "Belgium",
+            "Cyprus",
+            "Czech Republic",
+            "Denmark",
+            "Estonia",
+            "Finland",
+            "France",
+            "Germany",
+            "Greece",
+            "Hungary",
+            "Ireland",
+            "Italy",
+            "Latvia",
+            "Lithuania",
+            "Luxembourg",
+            "Malta",
+            "Netherlands",
+            "Poland",
+            "Portugal",
+            "Slovakia",
+            "Slovenia",
+            "Spain",
+            "Sweden",
+            "United Kingdom",
+            "Switzerland",
+            "Norway",
+            "Rest of EFTA"
+        ],
+        "Eastern Europe": [
+            "Albania",
+            "Bulgaria",
+            "Belarus",
+            "Croatia",
+            "Romania",
+            "Russian Federation",
+            "Ukraine",
+            "Rest of Eastern Europe"
+        ],
+        "Rest of Europe": [
+            "Rest of Europe"
+        ],
+        "North Africa": [
+            "Kazakhstan",
+            "Kyrgyzstan",
+            "Rest of Former Soviet Union",
+            "Armenia",
+            "Azerbaijan",
+            "Georgia",
+            "Iran",
+            "Turkey",
+            "Middle East",
+            "Egypt",
+            "Morocco",
+            "Tunisia",
+            "Rest of North Africa"
+        ],
+        "West Africa": [
+            "Nigeria",
+            "Senegal",
+            "Rest of West Africa"
+        ],
+        "Central Africa": [
+            "Rest of Central Africa"
+        ],
+        "South Central Africa": [
+            "Rest of South Central Africa"
+        ],
+        "Eastern Africa": [
+            "Ethiopia",
+            "Madagascar",
+            "Malawi",
+            "Mauritius",
+            "Mozambique",
+            "Tanzania",
+            "Uganda",
+            "Zambia",
+            "Zimbabwe",
+            "Rest of Eastern Africa"
+        ],
+        "South African Customs Union": [
+            "Botswana",
+            "South Africa",
+            "Rest of South African Customs Union"
+        ]
+    },
+    "Continent": {
+        "Oceania": [
+            "Australia",
+            "New Zealand",
+            "Rest of Oceania"
+        ],
+        "Asia": [
+            "China",
+            "Hong Kong",
+            "Japan",
+            "Korea",
+            "Taiwan",
+            "Rest of East Asia",
+            "Cambodia",
+            "Indonesia",
+            "Lao People\u2019s Democratic Republic",
+            "Malaysia",
+            "Philippines",
+            "Singapore",
+            "Thailand",
+            "Viet Nam",
+            "Rest of Southeast Asia",
+            "Bangladesh",
+            "India",
+            "Pakistan",
+            "Sri Lanka",
+            "Rest of South Asia"
+        ],
+        "North America": [
+            "Canada",
+            "United States of America",
+            "Mexico",
+            "Rest of North America",
+            "Costa Rica",
+            "Guatemala",
+            "Nicaragua",
+            "Panama",
+            "Rest of Central America",
+            "Caribbean"
+        ],
+        "South America": [
+            "Argentina",
+            "Bolivia",
+            "Brazil",
+            "Chile",
+            "Colombia",
+            "Ecuador",
+            "Paraguay",
+            "Peru",
+            "Uruguay",
+            "Venezuela",
+            "Rest of South America"
+        ],
+        "Europe": [
+            "Austria",
+            "Belgium",
+            "Cyprus",
+            "Czech Republic",
+            "Denmark",
+            "Estonia",
+            "Finland",
+            "France",
+            "Germany",
+            "Greece",
+            "Hungary",
+            "Ireland",
+            "Italy",
+            "Latvia",
+            "Lithuania",
+            "Luxembourg",
+            "Malta",
+            "Netherlands",
+            "Poland",
+            "Portugal",
+            "Slovakia",
+            "Slovenia",
+            "Spain",
+            "Sweden",
+            "United Kingdom",
+            "Switzerland",
+            "Norway",
+            "Rest of EFTA",
+            "Albania",
+            "Bulgaria",
+            "Belarus",
+            "Croatia",
+            "Romania",
+            "Russian Federation",
+            "Ukraine",
+            "Rest of Eastern Europe",
+            "Rest of Europe"
+        ],
+        "Africa": [
+            "Kazakhstan",
+            "Kyrgyzstan",
+            "Rest of Former Soviet Union",
+            "Armenia",
+            "Azerbaijan",
+            "Georgia",
+            "Iran",
+            "Turkey",
+            "Middle East",
+            "Egypt",
+            "Morocco",
+            "Tunisia",
+            "Rest of North Africa",
+            "Nigeria",
+            "Senegal",
+            "Rest of West Africa",
+            "Rest of Central Africa",
+            "Rest of South Central Africa",
+            "Ethiopia",
+            "Madagascar",
+            "Malawi",
+            "Mauritius",
+            "Mozambique",
+            "Tanzania",
+            "Uganda",
+            "Zambia",
+            "Zimbabwe",
+            "Rest of Eastern Africa",
+            "Botswana",
+            "South Africa",
+            "Rest of South African Customs Union"
+        ]
+    }
+},"Country",{
+    "Australia": {
+        "Region": "Oceania",
+        "Continent": "Oceania"
+    },
+    "New Zealand": {
+        "Region": "Oceania",
+        "Continent": "Oceania"
+    },
+    "Rest of Oceania": {
+        "Region": "Oceania",
+        "Continent": "Oceania"
+    },
+    "China": {
+        "Region": "East Asia",
+        "Continent": "Asia"
+    },
+    "Hong Kong": {
+        "Region": "East Asia",
+        "Continent": "Asia"
+    },
+    "Japan": {
+        "Region": "East Asia",
+        "Continent": "Asia"
+    },
+    "Korea": {
+        "Region": "East Asia",
+        "Continent": "Asia"
+    },
+    "Taiwan": {
+        "Region": "East Asia",
+        "Continent": "Asia"
+    },
+    "Rest of East Asia": {
+        "Region": "East Asia",
+        "Continent": "Asia"
+    },
+    "Cambodia": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Indonesia": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Lao People\u2019s Democratic Republic": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Malaysia": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Philippines": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Singapore": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Thailand": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Viet Nam": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Rest of Southeast Asia": {
+        "Region": "Southeast Asia",
+        "Continent": "Asia"
+    },
+    "Bangladesh": {
+        "Region": "South Asia",
+        "Continent": "Asia"
+    },
+    "India": {
+        "Region": "South Asia",
+        "Continent": "Asia"
+    },
+    "Pakistan": {
+        "Region": "South Asia",
+        "Continent": "Asia"
+    },
+    "Sri Lanka": {
+        "Region": "South Asia",
+        "Continent": "Asia"
+    },
+    "Rest of South Asia": {
+        "Region": "South Asia",
+        "Continent": "Asia"
+    },
+    "Canada": {
+        "Region": "North America",
+        "Continent": "North America"
+    },
+    "United States of America": {
+        "Region": "North America",
+        "Continent": "North America"
+    },
+    "Mexico": {
+        "Region": "North America",
+        "Continent": "North America"
+    },
+    "Rest of North America": {
+        "Region": "North America",
+        "Continent": "North America"
+    },
+    "Argentina": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Bolivia": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Brazil": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Chile": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Colombia": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Ecuador": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Paraguay": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Peru": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Uruguay": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Venezuela": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Rest of South America": {
+        "Region": "South America",
+        "Continent": "South America"
+    },
+    "Costa Rica": {
+        "Region": "Central America",
+        "Continent": "North America"
+    },
+    "Guatemala": {
+        "Region": "Central America",
+        "Continent": "North America"
+    },
+    "Nicaragua": {
+        "Region": "Central America",
+        "Continent": "North America"
+    },
+    "Panama": {
+        "Region": "Central America",
+        "Continent": "North America"
+    },
+    "Rest of Central America": {
+        "Region": "Central America",
+        "Continent": "North America"
+    },
+    "Caribbean": {
+        "Region": "Caribbean",
+        "Continent": "North America"
+    },
+    "Austria": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Belgium": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Cyprus": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Czech Republic": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Denmark": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Estonia": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Finland": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "France": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Germany": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Greece": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Hungary": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Ireland": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Italy": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Latvia": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Lithuania": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Luxembourg": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Malta": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Netherlands": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Poland": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Portugal": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Slovakia": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Slovenia": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Spain": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Sweden": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "United Kingdom": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Switzerland": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Norway": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Rest of EFTA": {
+        "Region": "EFTA",
+        "Continent": "Europe"
+    },
+    "Albania": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Bulgaria": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Belarus": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Croatia": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Romania": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Russian Federation": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Ukraine": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Rest of Eastern Europe": {
+        "Region": "Eastern Europe",
+        "Continent": "Europe"
+    },
+    "Rest of Europe": {
+        "Region": "Rest of Europe",
+        "Continent": "Europe"
+    },
+    "Kazakhstan": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Kyrgyzstan": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Rest of Former Soviet Union": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Armenia": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Azerbaijan": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Georgia": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Iran": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Turkey": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Middle East": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Egypt": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Morocco": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Tunisia": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Rest of North Africa": {
+        "Region": "North Africa",
+        "Continent": "Africa"
+    },
+    "Nigeria": {
+        "Region": "West Africa",
+        "Continent": "Africa"
+    },
+    "Senegal": {
+        "Region": "West Africa",
+        "Continent": "Africa"
+    },
+    "Rest of West Africa": {
+        "Region": "West Africa",
+        "Continent": "Africa"
+    },
+    "Rest of Central Africa": {
+        "Region": "Central Africa",
+        "Continent": "Africa"
+    },
+    "Rest of South Central Africa": {
+        "Region": "South Central Africa",
+        "Continent": "Africa"
+    },
+    "Ethiopia": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Madagascar": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Malawi": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Mauritius": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Mozambique": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Tanzania": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Uganda": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Zambia": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Zimbabwe": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Rest of Eastern Africa": {
+        "Region": "Eastern Africa",
+        "Continent": "Africa"
+    },
+    "Botswana": {
+        "Region": "South African Customs Union",
+        "Continent": "Africa"
+    },
+    "South Africa": {
+        "Region": "South African Customs Union",
+        "Continent": "Africa"
+    },
+    "Rest of South African Customs Union": {
+        "Region": "South African Customs Union",
+        "Continent": "Africa"
+    }
+}]

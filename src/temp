@@ -1,0 +1,4 @@
+
+                        <div style={{fontFamily:"cambria", height:"70vh", backgroundColor:"white"}}>
+                            {<LineGraph data={require('./'+i.toString()+'.json')} />}
+                        </div>

@@ -1,0 +1,38 @@
+{
+  "Stuff":
+  [["2000", [
+  { "id": "Washington", "value": 100000, "burger": 10000000},
+  { "id": "California", "value": 9000000, "burger": 10000000 },
+  { "id": "Texas", "value": 8000000 , "burger": 10000000},
+  { "id": "Kyoto", "value": 10000000 , "burger": 10000000},
+  { "id": "Kobe", "value": 5000000 , "burger": 10000000},
+  { "id": "Sapporo", "value": 3000000 , "burger": 10000000}
+]],["2001", [
+    { "id": "Washington", "value": 1000 , "burger": 10000000},
+    { "id": "California", "value": 9000000 , "burger": 10000000},
+    { "id": "Texas", "value": 7000000, "burger": 10000000 },
+    { "id": "Kyoto", "value": 11000000 , "burger": 10000000},
+    { "id": "Kobe", "value": 6000000 , "burger": 10000000},
+    { "id": "Sapporo", "value": 4000000 , "burger": 10000000}
+  ]],["2002", [
+    { "id": "Washington", "value": 10000000 , "burger": 10000000},
+    { "id": "California", "value": 9500000 , "burger": 10000000},
+    { "id": "Texas", "value": 5000000 , "burger": 10000000},
+    { "id": "Kyoto", "value": 10000000 , "burger": 10000000},
+    { "id": "Kobe", "value": 7000000, "burger": 10000000 },
+    { "id": "Sapporo", "value": 7000000 , "burger": 10000000}
+  ]],["2003", [
+    { "id": "Washington", "value": 11000000 , "burger": 10000000},
+    { "id": "California", "value": 9000000 , "burger": 10000000},
+    { "id": "Texas", "value": 4000000, "burger": 10000000 },
+    { "id": "Kyoto", "value": 9000000, "burger": 10000000},
+    { "id": "Kobe", "value": 8000000 , "burger": 10000000},
+    { "id": "Sapporo", "value": 7000000 , "burger": 10000000}
+  ]],["2004", [
+    { "id": "Washington", "value": 12000000, "burger": 10000000 },
+    { "id": "California", "value": 8000000 , "burger": 10000000},
+    { "id": "Texas", "value": 5000000 , "burger": 10000000},
+    { "id": "Kyoto", "value": 7000000, "burger": 10000000 },
+    { "id": "Kobe", "value": 8000000 , "burger": 10000000},
+    { "id": "Sapporo", "value": 7000000 , "burger": 10000000}
+  ]]]}

@@ -1,0 +1,7 @@
+{
+    "Grouping 1": [["red","blue","blue","red"],{"Group 1":"red","Group 2":"blue"}],
+    "Grouping 2": [["blue","blue","red","blue"],{"Group 1":"red","Group 2":"blue"}],
+    "Grouping 3": [["blue","blue","blue","blue"],{"Group 1":"blue"}],
+    "None": [["purple","orange","pink","violet"],{"California":"purple","Texas":"orange","Washington":"pink","Wyoming":"violet"}],
+    "_index": {"California":0, "Texas":1, "Washington":2,"Wyoming":3}
+}
