@@ -37,6 +37,7 @@
       { "id": "Washington", "value": 12, "burger": 11 },
       { "id": "Wyoming", "value": 3, "burger": 7}
     ]]],
-    "title":"Stuff (million)"
+    "title":"Stuff (million)",
+    "keys":["value","burger"]
   }
 }

@@ -1,7 +1,27 @@
 {
-    "Grouping 1": [["red","blue","blue"],{"Group 1":"red","Group 2":"blue"}],
-    "Grouping 2": [["blue","blue","red"],{"Group 1":"red","Group 2":"blue"}],
-    "Grouping 3": [["blue","blue","blue"],{"Group 1":"blue"}],
-    "None": [["purple","orange","pink"],{"California":"purple","Texas":"orange","Washington":"pink"}],
-    "_index": {"California":0, "Texas":1, "Washington":2}
+    "None": {"0.0":{"color":"#22CFE9"},"1.0":{"color":"purple"},"2.0":{"color":"orange"},"3.0":{"color":"pink"},"4.0":{"color":"violet"},
+            "5.0":{"color":"red"},"6.0":{"color":"magenta"},"7.0":{"color":"black"},"8.0":{"color":"yellow"} ,
+            "9.0":{"color":"blue"},"10.0":{"color":"green"},"11.0":{"color":"gray"}},
+    "Grouping 1": {
+        "Group 1":{
+            "color":"red",
+            "members":["0.0","1.0","2.0","7.0"]},
+        "Group 2":{
+            "color":"blue",
+            "members":["3.0","4.0","5.0","6.0"]},
+        "Group 3":{
+            "color":"pink",
+            "members":["8.0","9.0","10.0","11.0"]}},
+    "Grouping 2": {
+        "Group 1":{
+            "color":"green",
+            "members":["0.0","3.0","4.0","9.0"]},
+        "Group 2":{
+            "color":"yellow",
+            "members":["1.0","2.0","5.0","8.0"]},
+        "Group 3":{
+            "color":"blue",
+            "members":["6.0","7.0","10.0","11.0l"]}},
+    "_index": {"0.0":0,"1.0":1, "2.0":2, "3.0":3,"4.0":4,"5.0":5,"6.0":6,
+        "7.0":7,"8.0":8,"9.0":9,"10.0":10,"11.0":11}
 }

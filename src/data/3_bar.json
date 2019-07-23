@@ -1,27 +1,43 @@
 {
-  "Stuff":{
+  "Some Stuff":{
     "data": 
     [["2000", [
     { "id": "California", "value": 9, "burger": 10 },
-    { "id": "Texas", "value": 8 , "burger": 10},
-    { "id": "Washington", "value": 1, "burger": 10}
+    { "id": "Texas", "value": 8 , "burger": 3},
+    { "id": "Washington", "value": 1, "burger": 5},
+    { "id": "Wyoming", "value": 2, "burger": 7}
   ]],["2001", [
-      { "id": "California", "value": 9 , "burger": 10},
-      { "id": "Texas", "value": 7, "burger": 10 },
-      { "id": "Washington", "value": 1 , "burger": 10}
+      { "id": "California", "value": 9 , "burger": 9},
+      { "id": "Texas", "value": 7, "burger": 4 },
+      { "id": "Washington", "value": 1 , "burger": 6},
+      { "id": "Wyoming", "value": 3, "burger": 5}
     ]],["2002", [
       { "id": "California", "value": 9.5 , "burger": 10},
-      { "id": "Texas", "value": 5 , "burger": 10},
-      { "id": "Washington", "value": 10 , "burger": 10}
+      { "id": "Texas", "value": 5 , "burger": 5},
+      { "id": "Washington", "value": 10 , "burger": 7},
+      { "id": "Wyoming", "value": 2, "burger": 7}
     ]],["2003", [
-      { "id": "California", "value": 9 , "burger": 10},
-      { "id": "Texas", "value": 4, "burger": 10 },
-      { "id": "Washington", "value": 11 , "burger": 10}
+      { "id": "California", "value": 9 , "burger": 8},
+      { "id": "Texas", "value": 4, "burger": 4 },
+      { "id": "Washington", "value": 11 , "burger": 8},
+      { "id": "Wyoming", "value": 2, "burger": 5}
     ]],["2004", [
-      { "id": "California", "value": 8 , "burger": 10},
-      { "id": "Texas", "value": 5 , "burger": 10},
-      { "id": "Washington", "value": 12, "burger": 10 }
+      { "id": "California", "value": 8 , "burger": 13},
+      { "id": "Texas", "value": 5 , "burger": 4},
+      { "id": "Washington", "value": 12, "burger": 9 },
+      { "id": "Wyoming", "value": 5, "burger": 7}
+    ]],["2005", [
+      { "id": "California", "value": 10 , "burger": 12},
+      { "id": "Texas", "value": 4 , "burger": 6},
+      { "id": "Washington", "value": 12, "burger": 10 },
+      { "id": "Wyoming", "value": 4, "burger": 5}
+    ]],["2006", [
+      { "id": "California", "value": 6 , "burger": 14},
+      { "id": "Texas", "value": 5 , "burger": 2},
+      { "id": "Washington", "value": 12, "burger": 11 },
+      { "id": "Wyoming", "value": 3, "burger": 7}
     ]]],
-    "title":"Stuff (million)"
+    "title":"Stuff (million)",
+    "keys":["value","burger"]
   }
 }
