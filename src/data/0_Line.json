@@ -1,29 +1,29 @@
 {
-  "States":{
+  "Stuff":{
     "data": {
       "California":{
-        "2000": {"x":200,"y":100,"z":100},
-        "2001": {"x":120,"y":100,"z":200},
-        "2002": {"x":100,"y":100,"z":300},
-        "2003": {"x":120,"y":100,"z":400}
+        "2000": 200,
+        "2001": 120,
+        "2002": 100,
+        "2003": 120
       },
       "Texas":{
-        "2000": {"x":100,"y":200,"z":200},
-        "2001": {"x":200,"y":200,"z":300},
-        "2002": {"x":150,"y":200,"z":400},
-        "2003": {"x":200,"y":200,"z":500}
+        "2000": 100,
+        "2001": 200,
+        "2002": 150,
+        "2003": 200
       },
       "Washington":{
-        "2000": {"x":310,"y":300,"z":300},
-        "2001": {"x":100,"y":300,"z":400},
-        "2002": {"x":130,"y":300,"z":500},
-        "2003": {"x":110,"y":300,"z":100}
+        "2000": 310,
+        "2001": 100,
+        "2002": 130,
+        "2003": 110
       },
       "Wyoming":{
-        "2000": {"x":220,"y":400,"z":400},
-        "2001": {"x":110,"y":400,"z":500},
-        "2002": {"x":110,"y":400,"z":100},
-        "2003": {"x":160,"y":400,"z":200}
+        "2000": 220,
+        "2001": 110,
+        "2002": 110,
+        "2003": 160
       }
     },
     "normalizer":{
@@ -67,7 +67,7 @@
               "2003": 20
           },
           "Washington":{
-              "2000": 100,
+              "2000": 10,
               "2001": 20,
               "2002": 10,
               "2003": 20
@@ -86,7 +86,6 @@
       "2002":2,
       "2003":3
     },
-    "items":["x","y","z"],
     "title": "count",
     "group": {
       "None": {"California":{"color":"purple"},"Texas":{"color":"orange"},"Washington":{"color":"pink"},"Wyoming":{"color":"violet"}},
@@ -109,76 +108,83 @@
               "color":"red",
               "members":["California","Washington","Wyoming","Texas"]}}
   }
-  },"Countries":{
+  },"Other Stuff":{
     "data": {
-      "United States":{
-        "2000": {"x":200,"y":100},
-        "2001": {"x":300,"y":200},
-        "2002": {"x":140,"y":300}
+      "California":{
+        "2000": 200,
+        "2001": 300,
+        "2002": 140
       },
-      "United Kingdom":{
-        "2000": {"x":100,"y":200},
-        "2001": {"x":200,"y":300},
-        "2002": {"x":130,"y":400}
+      "Texas":{
+        "2000": 100,
+        "2001": 200,
+        "2002": 130
       },
-      "Germany":{
-        "2000": {"x":310,"y":300},
-        "2001": {"x":400,"y":400},
-        "2002": {"x":130,"y":100}
+      "Washington":{
+        "2000": 310,
+        "2001": 400,
+        "2002": 130
       },
-      "China":{
-        "2000": {"x":130,"y":400},
-        "2001": {"x":110,"y":100},
-        "2002": {"x":200,"y":200}
+      "Wyoming":{
+        "2000": 130,
+        "2001": 110,
+        "2002": 200
       }
     },
       "normalizer":{
         "population":{
-            "United States":{
+            "California":{
                 "2000": 20,
                 "2001": 20,
-                "2002": 20
+                "2002": 20,
+                "2003": 20
             },
-            "United Kingdom":{
+            "Texas":{
                 "2000": 20,
                 "2001": 20,
-                "2002": 20
+                "2002": 20,
+                "2003": 20
             },
-            "Germany":{
+            "Washington":{
                 "2000": 20,
                 "2001": 20,
-                "2002": 20
+                "2002": 20,
+                "2003": 20
             },
-            "China":{
+            "Wyoming":{
                 "2000": 20,
                 "2001": 20,
-                "2002": 20
+                "2002": 20,
+                "2003": 20
             }
         },
         "area":{
-            "United States":{
+            "California":{
                 "2000": 10,
                 "2001": 20,
-                "2002": 10
+                "2002": 10,
+                "2003": 20
             },
-            "United Kingdom":{
+            "Texas":{
                 "2000": 10,
                 "2001": 20,
-                "2002": 10
+                "2002": 10,
+                "2003": 20
             },
-            "Germany":{
+            "Washington":{
                 "2000": 10,
                 "2001": 20,
-                "2002": 10
+                "2002": 10,
+                "2003": 20
             },
-            "China":{
+            "Wyoming":{
                 "2000": 10,
                 "2001": 20,
-                "2002": 10
+                "2002": 10,
+                "2003": 20
             }
         }
     },
-    "items":["x","y"],
     "years":{
       "2000":0,
       "2001":1,
@@ -186,25 +192,25 @@
     },
     "title": "other count",
     "group": {
-      "None": {"United States":{"color":"purple"},"United Kingdom":{"color":"orange"},"Germany":{"color":"pink"},"China":{"color":"violet"}},
+      "None": {"California":{"color":"purple"},"Texas":{"color":"orange"},"Washington":{"color":"pink"},"Wyoming":{"color":"violet"}},
       "Grouping 1": {
           "Group 1":{
               "color":"red",
-              "members":["United States","United Kingdom"]},
+              "members":["California","Texas"]},
           "Group 2":{
               "color":"blue",
-              "members":["Germany","China"]}},
+              "members":["Washington","Wyoming"]}},
       "Grouping 2": {
           "Group 1":{
               "color":"red",
-              "members":["United States","Germany","China"]},
+              "members":["California","Washington","Wyoming"]},
           "Group 2":{
               "color":"blue",
-              "members":["United Kingdom"]}},
+              "members":["Texas"]}},
       "Grouping 3": {
           "Group 1":{
               "color":"red",
-              "members":["United States","Germany","China","United Kingdom"]}}
+              "members":["California","Washington","Wyoming","Texas"]}}
   }
   }
 }

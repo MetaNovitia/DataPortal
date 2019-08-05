@@ -62,100 +62,106 @@ const BarComponent = props => {
     }
     return (
         <g transform={`translate(${props.x},${props.y})`}>
-        <rect x={-3} y={7} width={props.width} height={props.height} fill="rgba(0, 0, 0, .07)" />
-        <rect width={props.width} height={props.height} fill={_color} 
-                style={{strokeWidth:2, stroke:"rgb(0,0,0)"}} />
-        <rect x={props.width - 5} width={5} height={props.height} fill={"rgb(0,0,0)"} fillOpacity={0.2} />
-        {txt}
+            <rect   x={-3} y={7} width={props.width} height={props.height} 
+                    fill="rgba(0, 0, 0, .07)" />
+            <rect   width={props.width} height={props.height} fill={_color} 
+                    style={{strokeWidth:2, stroke:"rgb(0,0,0)"}} />
+            <rect   x={props.width - 5} width={5} height={props.height} 
+                    fill={"rgb(0,0,0)"} fillOpacity={0.2} />
+            {txt}
         </g>
     );
 };
 
 const Sample = (props) => {
 
-    const dataGenerator = props.dataGenerator;
+    const dataGenerator = props.data;
     var groupMode = "grouped";
     if(props.groupMode){
         groupMode = "stacked";
     }
-  const [current, setCurrent] = useState([0,0]);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-        if(current[1]){
-            setCurrent([(current[0] + 1)%dataGenerator.length,current[1]]);
-        }
-    }, 1400);
-    return () => clearTimeout(timer);
-  }, [current, setCurrent]);
+    const [current, setCurrent] = useState([0,0]);
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if(current[1]){
+                setCurrent([(current[0] + 1)%dataGenerator.length,current[1]]);
+            }
+        }, 1400);
+        return () => clearTimeout(timer);
+    }, [current, setCurrent]);
 
-  const barData = dataGenerator[current[0]][1].sort((a, b) => a._total-b._total);
+    if(current[0] >= props.data.length){
+        current[0] = props.data.length-1;
+    }
 
-  return (
-    <>
-        <Bar
-            barComponent={BarComponent}
-            width={700}
-            height={500}
-            data={barData}
-            keys={props.pkeys}
-            indexBy="id"
-            colorBy="id"
-            margin={{ top: 50, right: 60, bottom: 50, left: 80 }}
-            padding={0.3}
-            groupMode={groupMode}
-            layout="horizontal"
-            colors={["red","orange","yellow","green","blue","purple"]}
-            borderColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
-            axisTop={null}
-            axisRight={null}
-            axisBottom={{
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legend: props.title,
-                legendPosition: 'middle',
-                legendOffset: 32
-            }}
-            enableGridX={false}
-            enableGridY={false}
-            axisLeft={{
-                tickSize: 5,
-                tickPadding: 5,
-                tickRotation: 0,
-                legendPosition: 'middle',
-                legendOffset: -40
-            }}
-            labelSkipWidth={12}
-            labelSkipHeight={12}
-            labelTextColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
-            animate={true}
-            motionStiffness={90}
-            motionDamping={15}
-        />
-      
-        {/* ----------------------------------- Year ----------------------------------- */}
-        <h2 style={{ marginLeft: 60, fontWeight: 400, color: '#555', textAlign:"center" }}>
-            <strong style={{ color: 'black', fontWeight: 900 }}>{dataGenerator[current[0]][0]}</strong>
-        </h2>
+    const barData = dataGenerator[current[0]][1].sort((a, b) => a._total-b._total);
 
-        {/* --------------------------  Player and Progress Bar-------------------------- */}
-        <Row style={{margin:0, padding:0, alignItems:"center"}}>
-            <Fab onClick={()=>{setCurrent([(current[0] - current[1]+1)%dataGenerator.length,1-current[1]])}}
-                size="medium" aria-label="Add" style={{marginLeft:50}}>
-                {[<PlayIcon />,<PauseIcon />][current[1]]}
-            </Fab>
-            
-            <StyledSlider value={current[0]}
-                    style={{width:550, marginLeft:30}}
-                    aria-labelledby="discrete-slider"
-                    step={1}
-                    onChange={(event, newValue)=>{setCurrent([newValue,current[1]])}}
-                    marks
-                    min={0}
-                    max={dataGenerator.length-1}/>
-        </Row>
-    </>
-  );
+    return (
+        <>
+            <Bar
+                barComponent={BarComponent}
+                width={700}
+                height={500}
+                data={barData}
+                keys={props.pkeys}
+                indexBy="id"
+                colorBy="id"
+                margin={{ top: 50, right: 60, bottom: 50, left: 80 }}
+                padding={0.3}
+                groupMode={groupMode}
+                layout="horizontal"
+                // colors={""}
+                borderColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
+                axisTop={null}
+                axisRight={null}
+                axisBottom={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legend: props.title,
+                    legendPosition: 'middle',
+                    legendOffset: 32
+                }}
+                enableGridX={false}
+                enableGridY={false}
+                axisLeft={{
+                    tickSize: 5,
+                    tickPadding: 5,
+                    tickRotation: 0,
+                    legendPosition: 'middle',
+                    legendOffset: -40
+                }}
+                labelSkipWidth={12}
+                labelSkipHeight={12}
+                labelTextColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
+                animate={true}
+                motionStiffness={90}
+                motionDamping={15}
+            />
+        
+            {/* ----------------------------------- Year ----------------------------------- */}
+            <h2 style={{ marginLeft: 60, fontWeight: 400, color: '#555', textAlign:"center" }}>
+                <strong style={{ color: 'black', fontWeight: 900 }}>{dataGenerator[current[0]][0]}</strong>
+            </h2>
+
+            {/* --------------------------  Player and Progress Bar-------------------------- */}
+            <Row style={{margin:0, padding:0, alignItems:"center"}}>
+                <Fab onClick={()=>{setCurrent([(current[0] - current[1]+1)%dataGenerator.length,1-current[1]])}}
+                    size="medium" aria-label="Add" style={{marginLeft:50}}>
+                    {[<PlayIcon />,<PauseIcon />][current[1]]}
+                </Fab>
+                
+                <StyledSlider value={current[0]}
+                        style={{width:550, marginLeft:30}}
+                        aria-labelledby="discrete-slider"
+                        step={1}
+                        onChange={(event, newValue)=>{setCurrent([newValue,current[1]])}}
+                        marks
+                        min={0}
+                        max={dataGenerator.length-1}/>
+            </Row>
+        </>
+    );
 };
 
 export default Sample;

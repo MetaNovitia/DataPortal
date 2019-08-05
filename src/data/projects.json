@@ -13,29 +13,5 @@
         "Map": {
 
         }
-    },
-    {
-        "title" : "Project 2: Title of my Second Project",
-        "Line" : {
-            
-        },
-        "Bar": {
-
-        }
-    },
-    {
-        "title" : "Project 3: Title of my Third Project",
-        "Bar": {
-
-        },
-        "Scatter": {
-
-        }
-    },
-    {
-        "title" : "Project 4: Title of my Fourth Project",
-        "Bar": {
-
-        }
     }
 ]
