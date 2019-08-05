@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/DataPortal/static/css/main.bd69461e.chunk.css",
-    "main.js": "/DataPortal/static/js/main.0ecc241e.chunk.js",
-    "main.js.map": "/DataPortal/static/js/main.0ecc241e.chunk.js.map",
+    "main.js": "/DataPortal/static/js/main.a0709380.chunk.js",
+    "main.js.map": "/DataPortal/static/js/main.a0709380.chunk.js.map",
     "runtime~main.js": "/DataPortal/static/js/runtime~main.23469f19.js",
     "runtime~main.js.map": "/DataPortal/static/js/runtime~main.23469f19.js.map",
     "static/css/2.0624914a.chunk.css": "/DataPortal/static/css/2.0624914a.chunk.css",
-    "static/js/2.c894c7d0.chunk.js": "/DataPortal/static/js/2.c894c7d0.chunk.js",
-    "static/js/2.c894c7d0.chunk.js.map": "/DataPortal/static/js/2.c894c7d0.chunk.js.map",
+    "static/js/2.cd953b45.chunk.js": "/DataPortal/static/js/2.cd953b45.chunk.js",
+    "static/js/2.cd953b45.chunk.js.map": "/DataPortal/static/js/2.cd953b45.chunk.js.map",
     "index.html": "/DataPortal/index.html",
-    "precache-manifest.b4d5d1964ee51b68fba35fd674e9ecc3.js": "/DataPortal/precache-manifest.b4d5d1964ee51b68fba35fd674e9ecc3.js",
+    "precache-manifest.8801859e83ed250327b35aefc5063852.js": "/DataPortal/precache-manifest.8801859e83ed250327b35aefc5063852.js",
     "service-worker.js": "/DataPortal/service-worker.js",
     "static/css/2.0624914a.chunk.css.map": "/DataPortal/static/css/2.0624914a.chunk.css.map",
     "static/css/main.bd69461e.chunk.css.map": "/DataPortal/static/css/main.bd69461e.chunk.css.map"
