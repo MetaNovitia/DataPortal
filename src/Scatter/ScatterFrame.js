@@ -292,6 +292,7 @@ export default class ScatterFrame extends Component {
                                 titleX={variableX}
                                 titleY={variableY}
                                 dataGenerator={this.filteredData}
+                                colors={this.filteredColors}
                             />}
                     </div>
             

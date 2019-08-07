@@ -46,6 +46,7 @@ const Scatter = (props) => {
                     // xFormat={function(e){return e+" kg"}}
                     yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
                     // yFormat={function(e){return e+" cm"}}
+                    colors={props.colors}
                     blendMode="multiply"
                     axisTop={null}
                     axisRight={null}
