@@ -253,7 +253,7 @@ export default class LineFrame extends Component {
                 <Row style={{width:"100%", margin:"0", padding:"0"}}>
 
                     {/* // =========================== Graph =========================== // */}
-                    <div style={{height:"600px", width:"80%"}}>
+                    <div style={{height:"600px", width:"77%"}}>
                         {<LineGraph
                                     data    = {this.filteredData} 
                                     stacked = {stacked} 
@@ -264,7 +264,7 @@ export default class LineFrame extends Component {
                     </div>
             
                     {/* // =========================== Options =========================== // */}
-                    <div style={{height:"600px", width:"20%", padding:'2%', overflowY: "scroll"}}>
+                    <div style={{height:"600px", width:"23%", padding:'2%', overflowY: "scroll"}}>
 
                         {/* // --------------------------- Stacked --------------------------- // */}
                         <Row style={{display:'flex',paddingLeft:"10%", marginBottom: "5%"}}>

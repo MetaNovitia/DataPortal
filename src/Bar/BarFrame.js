@@ -27,7 +27,9 @@ export default class BarFrame extends Component {
             normalizer      : "",
             stacked         : true,
             selectedKeys    : {},
-            selectedItems   : []
+            selectedItems   : [],
+            ranking         : "top",
+            numberOfItems   : 4
         }
 
         this.data               = {};
@@ -85,6 +87,8 @@ export default class BarFrame extends Component {
         var category        = this.options["category"];
         var variable        = this.options["variable"];
         var normalizer      = this.options["normalizer"];
+        var numberOfItems   = this.options["numberOfItems"];
+        var ranking         = this.options["ranking"];
 
         // =========================== Reload Topic =========================== //
         if(this.topicIndex !== topicIndex){
@@ -269,17 +273,19 @@ export default class BarFrame extends Component {
                 <Row style={{height:"600px",width:"100%", margin:"0", padding:"0"}}>
 
                     {/* // =========================== Graph =========================== // */}
-                    <div style={{width:"80%"}}>
+                    <div style={{width:"77%"}}>
                         {<BarGraph
-                                data        = {this.filteredData} 
-                                groupMode   = {stacked}
-                                title       = {this.data[variable].title}
-                                pkeys       = {this.options.selectedItems}
+                                data            = {this.filteredData} 
+                                groupMode       = {stacked}
+                                title           = {this.data[variable].title}
+                                pkeys           = {this.options.selectedItems}
+                                numberOfItems   = {numberOfItems}
+                                ranking         = {ranking}
                             />}
                     </div>
             
                     {/* // =========================== Options =========================== // */}
-                    <div style={{width:"20%", padding:'2%', overflowY: "scroll"}}>
+                    <div style={{width:"23%", padding:'2%', overflowY: "scroll"}}>
 
                         {/* // --------------------------- Stacked --------------------------- // */}
                         <Row style={{display:'flex',paddingLeft:"10%", marginBottom: "5%"}}>
@@ -327,7 +333,39 @@ export default class BarFrame extends Component {
                             </Select>
                         </div>
                         <br />
-
+                        
+                        {/* // --------------------------- Top/Bottom --------------------------- // */}
+                        <div style={{width:"100%"}}>
+                            <InputLabel shrink htmlFor="ranking-label-placeholder">
+                            Ranking
+                            </InputLabel>
+                            <Select
+                                style       = {{width:"60%"}}
+                                value       = {ranking}
+                                onChange    = {this.changeInput}
+                                input       = {<Input name="ranking" id="ranking-label-placeholder" />}
+                                name        = "ranking"
+                                displayEmpty
+                            >
+                                <MenuItem value={"top"}>Top</MenuItem>
+                                <MenuItem value={"bottom"}>Bottom</MenuItem>
+                            </Select>
+                            <Select
+                                style       = {{width:"39%",marginLeft:"1%"}}
+                                value       = {numberOfItems}
+                                onChange    = {this.changeInput}
+                                input       = {<Input name="numberOfItems" id="numberOfItems-label-placeholder" />}
+                                name        = "numberOfItems"
+                                displayEmpty
+                            >
+                                <MenuItem value={1}>1</MenuItem>
+                                <MenuItem value={2}>2</MenuItem>
+                                <MenuItem value={3}>3</MenuItem>
+                                <MenuItem value={4}>4</MenuItem>
+                            </Select>
+                        </div>
+                        <br />
+                        
                         {/* // --------------------------- Categorize --------------------------- // */}
                         <div>
                             <InputLabel shrink htmlFor="categorize-label-placeholder">

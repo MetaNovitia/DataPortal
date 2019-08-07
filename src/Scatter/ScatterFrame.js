@@ -287,7 +287,7 @@ export default class ScatterFrame extends Component {
                 <Row style={{width:"100%", margin:"0", padding:"0"}}>
 
                     {/* // =========================== Graph =========================== // */}
-                    <div style={{height:"600px", width:"80%"}}>
+                    <div style={{height:"600px", width:"77%"}}>
                         {<ScatterGraph
                                 titleX={variableX}
                                 titleY={variableY}
@@ -296,7 +296,7 @@ export default class ScatterFrame extends Component {
                     </div>
             
                     {/* // =========================== Options =========================== // */}
-                    <div style={{height:"600px", width:"20%", padding:'2%', overflowY: "scroll"}}>
+                    <div style={{height:"600px", width:"23%", padding:'2%', overflowY: "scroll"}}>
 
                         {/* // --------------------------- Variable --------------------------- // */}
                         <div>

@@ -94,7 +94,13 @@ const Sample = (props) => {
         current[0] = props.data.length-1;
     }
 
-    const barData = dataGenerator[current[0]][1].sort((a, b) => a._total-b._total);
+    var barData = [];
+    if(props.ranking==="top"){
+        barData = dataGenerator[current[0]][1].sort((a, b) => a._total-b._total);
+    }else{
+        barData = dataGenerator[current[0]][1].sort((a, b) => b._total-a._total);
+    }
+    barData = barData.slice(dataGenerator[current[0]][1].length-props.numberOfItems);
 
     return (
         <>
