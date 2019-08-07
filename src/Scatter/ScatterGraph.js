@@ -68,6 +68,26 @@ const Scatter = (props) => {
                         legendPosition: 'middle',
                         legendOffset: -60
                     }}
+                    tooltip={({ node }) => {
+                        return(
+                        <div
+                          style={{
+                            color: node.style.color,
+                            background: 'white',
+                            border: '2px solid #333',
+                            borderRadius: "5px",
+                            padding: '12px 16px',
+                          }}
+                        >
+                          <strong>
+                            {node.data.serieId}
+                          </strong>
+                          <br />
+                          {`${props.titleX}: ${node.data.formattedX}`}
+                          <br />
+                          {`${props.titleY}: ${node.data.formattedY}`}
+                        </div>
+                      )}}
                 />
             </div>
         
