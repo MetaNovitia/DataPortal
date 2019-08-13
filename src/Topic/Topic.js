@@ -9,6 +9,10 @@ import LineIcon from '@material-ui/icons/Timeline';
 import BarIcon from '@material-ui/icons/Notes';
 import ScatterIcon from '@material-ui/icons/ScatterPlot';
 import MapIcon from '@material-ui/icons/Map';
+import Button from '@material-ui/core/Button';
+import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
+import htmlToImage from 'html-to-image';
+import { saveAs } from 'file-saver';
 
 const graphTypes = ["Line", "Bar", "Scatter", "Map"];
 const graphIcons = [<LineIcon />,<BarIcon />,<ScatterIcon />,<MapIcon />];
@@ -19,6 +23,7 @@ export default class Topic extends Component {
         super(props);
         this.state          = {graphIndex:0};
         this.changeInnerTab = this.changeInnerTab.bind(this);
+        this.download = this.download.bind(this);
         this.graphtabs      = [];
         this.graph          = <LineFrame topicIndex={this.props.topicIndex}/>;
 
@@ -26,6 +31,16 @@ export default class Topic extends Component {
             this.graphtabs.push(<Tab key={graphTypes[i]} label={graphTypes[i]} icon={graphIcons[i]}/>);
         }
         
+    }
+
+    download(){
+
+        htmlToImage.toBlob(document.getElementById('dp-graphdiv'))
+            .then(function (blob) {
+            window.saveAs(blob, 'graph.png');
+            });
+
+        this.setState({});
     }
 
     changeInnerTab(event, newValue){
@@ -63,6 +78,12 @@ export default class Topic extends Component {
                     {this.graph}
                 <br />
                 
+                <div style={{width:"100%",textAlign:"right"}}>
+                        <Button onClick={this.download} variant="contained" color="default" style={{marginRight:"30px",marginBottom:"20px"}}>
+                            Download
+                            <CloudDownloadIcon style={{marginLeft:"10px"}}/>
+                        </Button>
+                    </div>
                 {/* <div><GrabData url="http://13.56.207.238:5000/database/1"/></div> */}
             </div>
         );

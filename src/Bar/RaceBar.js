@@ -104,46 +104,48 @@ const Sample = (props) => {
 
     return (
         <>
-            <Bar
-                barComponent={BarComponent}
-                width={700}
-                height={500}
-                data={barData}
-                keys={props.pkeys}
-                indexBy="id"
-                colorBy="id"
-                margin={{ top: 50, right: 60, bottom: 50, left: 80 }}
-                padding={0.3}
-                groupMode={groupMode}
-                layout="horizontal"
-                // colors={""}
-                borderColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
-                axisTop={null}
-                axisRight={null}
-                axisBottom={{
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legend: props.title,
-                    legendPosition: 'middle',
-                    legendOffset: 32
-                }}
-                enableGridX={false}
-                enableGridY={false}
-                axisLeft={{
-                    tickSize: 5,
-                    tickPadding: 5,
-                    tickRotation: 0,
-                    legendPosition: 'middle',
-                    legendOffset: -40
-                }}
-                labelSkipWidth={12}
-                labelSkipHeight={12}
-                labelTextColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
-                animate={true}
-                motionStiffness={90}
-                motionDamping={15}
-            />
+            <div id="dp-graphdiv" style={{width:"700px",height:"500px"}}>
+                <Bar
+                    barComponent={BarComponent}
+                    width={700}
+                    height={500}
+                    data={barData}
+                    keys={props.pkeys}
+                    indexBy="id"
+                    colorBy="id"
+                    margin={{ top: 50, right: 60, bottom: 50, left: 80 }}
+                    padding={0.3}
+                    groupMode={groupMode}
+                    layout="horizontal"
+                    // colors={""}
+                    borderColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
+                    axisTop={null}
+                    axisRight={null}
+                    axisBottom={{
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                        legend: props.title,
+                        legendPosition: 'middle',
+                        legendOffset: 32
+                    }}
+                    enableGridX={false}
+                    enableGridY={false}
+                    axisLeft={{
+                        tickSize: 5,
+                        tickPadding: 5,
+                        tickRotation: 0,
+                        legendPosition: 'middle',
+                        legendOffset: -40
+                    }}
+                    labelSkipWidth={12}
+                    labelSkipHeight={12}
+                    labelTextColor={{ from: 'color', modifiers: [ [ 'darker', 1.6 ] ] }}
+                    animate={true}
+                    motionStiffness={90}
+                    motionDamping={15}
+                />
+            </div>
         
             {/* ----------------------------------- Year ----------------------------------- */}
             <h2 style={{ marginLeft: 60, fontWeight: 400, color: '#555', textAlign:"center" }}>

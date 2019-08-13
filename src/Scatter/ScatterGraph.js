@@ -37,8 +37,22 @@ const Scatter = (props) => {
     return (
         <>
         
-            <div style={{width:'100%',height:"500px"}}>
+            <div style={{width:'100%',height:"500px"}} id="dp-graphdiv" position="relative">
+        
+                {/* ----------------------------------- Year ----------------------------------- */}
+                <h2 style={{ 
+                    // position:"absolute",
+                    // top: this.parent().offet(),
+                    zIndex: 0,
+                    marginLeft: 60, 
+                    fontWeight: 400, 
+                    color: '#555', 
+                    textAlign:"center" }}>
+                    <strong style={{ color: 'black', fontWeight: 900 }}>{dataGenerator[current[0]][0]}</strong>
+                </h2>
+
                 <ResponsiveScatterPlot
+                    style={{zIndex: 1}}
                     data={dataGenerator[current[0]][1]}
                     useMesh={false}
                     margin={{ top: 60, right: 60, bottom: 70, left: 90 }}
@@ -90,11 +104,6 @@ const Scatter = (props) => {
                       )}}
                 />
             </div>
-        
-            {/* ----------------------------------- Year ----------------------------------- */}
-            <h2 style={{ marginLeft: 60, fontWeight: 400, color: '#555', textAlign:"center" }}>
-                <strong style={{ color: 'black', fontWeight: 900 }}>{dataGenerator[current[0]][0]}</strong>
-            </h2>
 
             {/* --------------------------  Player and Progress Bar-------------------------- */}
             <Row style={{margin:0, padding:0, alignItems:"center"}}>
