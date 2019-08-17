@@ -44,16 +44,16 @@ export default class Topic extends Component {
     }
 
     changeInnerTab(event, newValue){
+        this.setState({graphIndex: newValue});
+    }
+
+    render(){
         this.graph = [
             <LineFrame topicIndex={this.props.topicIndex}/>,
             <BarFrame topicIndex={this.props.topicIndex}/>,
             <ScatterFrame topicIndex={this.props.topicIndex}/>,
             <LineFrame topicIndex={this.props.topicIndex}/>
-        ][newValue];
-        this.setState({graphIndex: newValue});
-    }
-
-    render(){
+        ][this.state.graphIndex];
 
         return (
             <div style={{

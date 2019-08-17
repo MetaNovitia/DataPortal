@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
+import linear_colors from '../data/Numerical.json';
 import $ from 'jquery';
 
 const maxInitalKeys   = 40;
@@ -34,6 +35,7 @@ export default class LineFrame extends Component {
         this.data               = undefined;
         this.topicIndex         = -1;
         this.variable           = "";
+        this.type               = "";
         this.category           = "None";
         this.variableItems      = [];
         this.categoryItems      = [];
@@ -65,10 +67,11 @@ export default class LineFrame extends Component {
         if(event==="stacked"){
             this.options.stacked = !this.options.stacked;
         }else{
-            this.options[event.target.name] = event.target.value;
-            if(event.target.name==="normalizer"){
+            if( event.target.name==="normalizer" && 
+                this.options[event.target.name] !== event.target.value){
                 this.selectedChanged = true;
             }
+            this.options[event.target.name] = event.target.value;
         }
         this.setState({});
     }
@@ -77,6 +80,10 @@ export default class LineFrame extends Component {
     set(data){
         this.data = data.topics;
         this.done = true;
+
+        // update data to new topic's
+        this.topicIndex = this.props.topicIndex;
+
         this.setState({});
     }
 
@@ -84,12 +91,13 @@ export default class LineFrame extends Component {
 
     
     render(){
-        if((this.topicIndex !== topicIndex) && this.done===false){
-            $.ajax({
-                url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-                context: document.body,
-                crossDomain: true
-            }).done(this.set);
+        if(this.topicIndex !== this.props.topicIndex){
+            // $.ajax({
+            //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+            //     context: document.body,
+            //     crossDomain: true
+            // }).done(this.set);
+            this.set(require("../data/"+this.props.topicIndex+".json"));
         }
 
         if(this.data!==undefined){
@@ -100,7 +108,6 @@ export default class LineFrame extends Component {
             var key = "";   // object key
 
             // ============================= Init ============================= //
-            var topicIndex      = this.props.topicIndex;
             var stacked         = this.options["stacked"];
             var category        = this.options["category"];
             var curve           = this.options["curve"];
@@ -108,11 +115,7 @@ export default class LineFrame extends Component {
             var normalizer      = this.options["normalizer"];
 
             // =========================== Reload Topic =========================== //
-            if((this.topicIndex !== topicIndex) && this.done){
-                this.done = false;
-
-                // update data to new topic's
-                this.topicIndex = topicIndex;
+            if(this.done){
                 
                 // Variable Menu
                 this.variableItems = [];
@@ -128,10 +131,9 @@ export default class LineFrame extends Component {
             }
 
             // =========================== Reload Variable =========================== //
-            if(this.variable !== variable || this.topicIndex !== topicIndex){
+            if(this.variable !== variable || this.done){
 
-                // var groupingdata        = this.data[variable]["group"];
-                var groupingdata        = "Linear";
+                var groupingdata        = this.data[variable].type;
                 var normalizerdata      = this.data;
 
                 this.options["category"]    = "None";
@@ -148,26 +150,13 @@ export default class LineFrame extends Component {
                     );
                 }*/
                 this.groups = {};
-                if(groupingdata==="Linear"){
-                    var vItems = Object.keys(this.data[variable]);
-                    var startColor  = [ Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256)]; 
-                    var endColor    = [ Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256)];
-                    var colorStep   = [ (endColor[0]-startColor[0])/vItems.length,
-                                        (endColor[1]-startColor[1])/vItems.length,
-                                        (endColor[2]-startColor[2])/vItems.length]
+                if(groupingdata==="Numerical"){
+                    var vItems = Object.keys(this.data[variable].data);
 
                     this.groups["None"] = {};
                     for(i in vItems){
-                        this.groups["None"][vItems[i]] = {"color":
-                            "rgb("+
-                            (startColor[0]+(colorStep[0]*i)).toString() + "," +
-                            (startColor[1]+(colorStep[1]*i)).toString() + "," +
-                            (startColor[2]+(colorStep[2]*i)).toString() +
-                            ")"
+                        this.groups["None"][vItems[i]] = {
+                            "color": linear_colors["cool"][Math.floor(i/vItems.length*1000)]
                         };
                     }
                 }
@@ -185,7 +174,7 @@ export default class LineFrame extends Component {
                 this.selectedChanged = true;
                 this.options["selectedKeys"] = {};
                 ct = 0;
-                for(key in this.data[variable]){
+                for(key in this.data[variable].data){
                     this.options["selectedKeys"][key] = ((ct++ % maxInitalKeys === 0) && ct!==1);
                 }
 
@@ -196,7 +185,7 @@ export default class LineFrame extends Component {
 
             // =========================== Reload Category =========================== //
             if(this.selectedChanged || this.category !== category || 
-                this.variable !== variable || this.topicIndex !== topicIndex){
+                this.variable !== variable || this.done){
                 // --------------------- Legend --------------------- //
                 this.legend     = [];
                 this.colors     = {};
@@ -261,7 +250,9 @@ export default class LineFrame extends Component {
             if(this.selectedChanged){ 
                 this.filteredData       = [];
                 this.filteredColors     = [];
-                var temp_years_index    = Object.keys(this.data[variable][Object.keys(this.data[variable])[0]]);
+                var temp_years_index    =   Object.keys(this.data[variable].data[
+                                                Object.keys(this.data[variable].data)[0]
+                                            ]);
                 var years_index         = {};
                 for(i in temp_years_index){
                     years_index[temp_years_index[i]] = i;
@@ -270,7 +261,7 @@ export default class LineFrame extends Component {
                 // filter
                 for(key in this.options.selectedKeys){
                     if(this.options.selectedKeys[key]){
-                        var t_entry = this.data[variable][key];
+                        var t_entry = this.data[variable].data[key];
                         var normalizedEntry = {data:[],id:key};
 
                         // normalize data
@@ -307,11 +298,10 @@ export default class LineFrame extends Component {
                 }
             }
 
-            this.topicIndex         = topicIndex;
             this.variable           = variable;
             this.category           = category;
             this.selectedChanged    = false;
-            console.log(this.filteredData);
+            this.done               = false;
 
             return (
                     <div>
@@ -324,7 +314,7 @@ export default class LineFrame extends Component {
                                             stacked = {stacked} 
                                             area    = {stacked}
                                             curve   = {curve}
-                                            title   = {this.data[variable].title}
+                                            title   = {this.data[variable].data.title}
                                             colors  = {this.filteredColors}/>}
                             </div>
                     

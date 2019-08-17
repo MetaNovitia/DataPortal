@@ -13,9 +13,13 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
+import countries from '../data/map.json';
+import linear_colors from '../data/Numerical.json';
 import $ from 'jquery';
 
 const maxInitalKeys   = 10;
+const categoryTypes   = ["Numerical","Country","States","Other"];
+const countryGroups   = ["None","Region","Continent"]
 
 export default class ScatterFrame extends Component {
 
@@ -23,7 +27,7 @@ export default class ScatterFrame extends Component {
         super(props);
         this.options = {
             category        : "None",
-            variable        : "",
+            // variable        : categoryTypes[0],
             variableX       : "",
             variableY       : "",
             normalizerX     : "",
@@ -33,12 +37,12 @@ export default class ScatterFrame extends Component {
 
         this.data               = {};
         this.topicIndex         = -1;
-        this.variable           = "";
+        // this.variable           = categoryTypes[0];
         this.variableX          = "";
         this.variableY          = "";
         this.category           = "None";
-        this.variableItems      = [];
-        this.variableItemsXY    = [];
+        this.variableItemsX    = [];
+        this.variableItemsY    = [];
         this.categoryItems      = [];
         this.normalizerItems    = [];
         this.keysXY             = [];
@@ -56,6 +60,14 @@ export default class ScatterFrame extends Component {
         this.checkBox           = this.checkBox.bind(this);
         this.set                = this.set.bind(this);
         this.done               = false;
+
+        // this.variableItems = [];
+        // for(var i in categoryTypes){
+        //     var key = categoryTypes[i];
+        //     this.variableItemsXY.push(
+        //         <MenuItem key={key} value={key}>{key}</MenuItem>
+        //     );
+        // }
     }
 
 
@@ -76,17 +88,22 @@ export default class ScatterFrame extends Component {
     set(data){
         this.data = data.topics;
         this.done = true;
+
+        // update data to new topic's
+        this.topicIndex = this.props.topicIndex;
+        
         this.setState({});
     }
     
     render(){
 
-        if((this.topicIndex !== topicIndex) && this.done===false){
-            $.ajax({
-                url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-                context: document.body,
-                crossDomain: true
-            }).done(this.set);
+        if(this.topicIndex !== this.props.topicIndex){
+            // $.ajax({
+            //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+            //     context: document.body,
+            //     crossDomain: true
+            // }).done(this.set);
+            this.set(require("../data/"+this.props.topicIndex+".json"));
         }
 
         if(this.data!==undefined){
@@ -100,17 +117,26 @@ export default class ScatterFrame extends Component {
             // ============================= Init ============================= //
             var topicIndex      = this.props.topicIndex;
             var category        = this.options["category"];
-            // var variable        = this.options["variable"];     // change
-            var variable        = "Linear"
+            // var variable        = this.options["variable"];
             var variableX       = this.options["variableX"];
             var variableY       = this.options["variableY"];
             var normalizerX     = this.options["normalizerX"];
             var normalizer      = this.options["normalizer"];
+            var displayCategory = "initial"
 
             // =========================== Reload Topic =========================== //
-            if(this.topicIndex !== topicIndex && this.done){
-                this.done = false;
-                this.topicIndex = topicIndex;
+            if(this.done){
+            //     // ------------------- Variable Menu ------------------- //
+            //     this.options["variable"] = categoryTypes[0];
+            // }
+
+
+            // // =========================== Reload Variable =========================== //
+            // if(this.variable !== variable || this.done){
+
+                // if(variable === "Numerical"){
+                //     displayCategory = "none";
+                // }
 
                 // ------------------- VariableXY Menu ------------------- //
                 this.variableItemsXY = [];
@@ -118,19 +144,18 @@ export default class ScatterFrame extends Component {
                 for(i in this.data){
                     key = this.data[i];
                     headers.push(key);
-                    this.variableItemsXY.push(
+                    this.variableItemsX.push(
                         <MenuItem key={key} value={key}>{key}</MenuItem>
                     );
                 }
 
                 variableX  = headers[0];
                 variableY  = headers[0];
-                if(headers.length > 1) variableY  = headers[0];
+                if(headers.length > 1) variableY  = headers[1];
                 this.options["variableX"] = variableX;
                 this.options["variableY"] = variableY;
 
-                // var groupingdata        = this.data[variable]["group"];
-                var groupingdata        = "Linear";
+                var groupingdata        = this.data[variableX].type;
                 var normalizerdata      = this.data;
 
                 this.options["normalizerX"] = "";
@@ -165,37 +190,19 @@ export default class ScatterFrame extends Component {
                     this.options["selectedKeys"][key] = (ct++ < maxInitalKeys);
                 }
 
-                // // ------------------ Selected Items ------------------ //
-                // this.options.selectedItems = [];
-                // for(key in this.data[variable]["items"]){
-                //     this.options.selectedItems.push(this.data[variable]["items"][key]);
-                // }
-
             }
 
             if(this.variableX!==variableX || this.variableY!==variableY){
                 this.options["category"]    = "None";
                 this.groups = {};
-                if(groupingdata==="Linear"){
-                    var vItems = Object.keys(this.data[variableX]);
-                    var startColor  = [ Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256)]; 
-                    var endColor    = [ Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256),
-                                        Math.floor(Math.random() * 256)];
-                    var colorStep   = [ (endColor[0]-startColor[0])/vItems.length,
-                                        (endColor[1]-startColor[1])/vItems.length,
-                                        (endColor[2]-startColor[2])/vItems.length]
+                if(variable==="Numerical"){
 
                     this.groups["None"] = {};
+                    var vItems = Object.keys(this.data[variable]);
+
                     for(i in vItems){
-                        this.groups["None"][vItems[i]] = {"color":
-                            "rgb("+
-                            (startColor[0]+(colorStep[0]*i)).toString() + "," +
-                            (startColor[1]+(colorStep[1]*i)).toString() + "," +
-                            (startColor[2]+(colorStep[2]*i)).toString() +
-                            ")"
+                        this.groups["None"][vItems[i]] = {
+                            "color": linear_colors["jet"][Math.floor(i/vItems.length)]
                         };
                     }
                 }
@@ -444,7 +451,7 @@ export default class ScatterFrame extends Component {
                                 Categorize
                                 </InputLabel>
                                 <Select
-                                    style       = {{width:"100%"}}
+                                    style       = {{width:"100%",display:displayCategory}}
                                     value       = {category}
                                     onChange    = {this.changeInput}
                                     input       = {<Input name="categorize" id="categorize-label-placeholder" />}
@@ -454,7 +461,7 @@ export default class ScatterFrame extends Component {
                                     {this.categoryItems}
                                 </Select>
                             </div>
-                            <br />
+                            <br style={{display:displayCategory}}/>
 
                             {/* // --------------------------- Legend --------------------------- // */}
                             <div>

@@ -1,0 +1,10 @@
+{
+    "_id": "5d515080b707cc64dfd7a290",
+    "name": "water",
+    "mapAttributes": {
+        "scale": 100
+    },
+    "list": {
+        "Basin": "Numerical"
+    }
+}
