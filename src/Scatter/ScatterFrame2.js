@@ -6,8 +6,7 @@
 
 import React, {Component} from 'react';
 import { Row} from 'reactstrap';
-import LineGraph from './LineGraph.js'
-import Switch from "react-switch";
+import ScatterGraph from './ScatterGraph.js';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,7 +17,7 @@ import $ from 'jquery';
 
 const maxInitalKeys   = 40;
 
-export default class LineFrame extends Component {
+export default class ScatterFrame extends Component {
 
     constructor(props){
         super(props);
@@ -76,7 +75,6 @@ export default class LineFrame extends Component {
 
     set(data){
         this.data = data.topics;
-        this.done = true;
         this.setState({});
     }
 
@@ -90,6 +88,7 @@ export default class LineFrame extends Component {
                 context: document.body,
                 crossDomain: true
             }).done(this.set);
+            this.done = true;
         }
 
         if(this.data!==undefined){
@@ -319,13 +318,12 @@ export default class LineFrame extends Component {
 
                             {/* // =========================== Graph =========================== // */}
                             <div style={{height:"600px", width:"77%"}}>
-                                {<LineGraph
-                                            data    = {this.filteredData} 
-                                            stacked = {stacked} 
-                                            area    = {stacked}
-                                            curve   = {curve}
-                                            title   = {this.data[variable].title}
-                                            colors  = {this.filteredColors}/>}
+                                {<ScatterGraph
+                                        titleX={variableX}
+                                        titleY={variableY}
+                                        dataGenerator={this.filteredData}
+                                        colors={this.filteredColors}
+                                    />}
                             </div>
                     
                             {/* // =========================== Options =========================== // */}
