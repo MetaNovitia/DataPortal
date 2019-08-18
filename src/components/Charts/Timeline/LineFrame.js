@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
-import linear_colors from '../data/Numerical.json';
+import linear_colors from '../../../data/Numerical.json';
 import $ from 'jquery';
 
 const maxInitalKeys   = 40;
@@ -78,7 +78,7 @@ export default class LineFrame extends Component {
     // ====================================================================== //
 
     set(data){
-        this.data = data.topics;
+        this.data = data;
         this.done = true;
 
         // update data to new topic's
@@ -97,7 +97,11 @@ export default class LineFrame extends Component {
             //     context: document.body,
             //     crossDomain: true
             // }).done(this.set);
-            this.set(require("../data/"+this.props.topicIndex+".json"));
+            this.set(require(
+                "../../../data/new/get/" + this.props.topicIndex+
+                "/" + this.props.type +
+                "/"+ this.props.variable +
+                ".json"));
         }
 
         if(this.data!==undefined){
@@ -133,7 +137,7 @@ export default class LineFrame extends Component {
             // =========================== Reload Variable =========================== //
             if(this.variable !== variable || this.done){
 
-                var groupingdata        = this.data[variable].type;
+                var groupingdata        = this.props.type;
                 var normalizerdata      = this.data;
 
                 this.options["category"]    = "None";

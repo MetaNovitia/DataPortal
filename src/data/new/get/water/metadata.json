@@ -5,6 +5,12 @@
         "scale": 100
     },
     "list": {
-        "Basin": "Numerical"
+        "Basin": {
+            "Type":"Numerical",
+            "variables": [
+                "1980-2017_livestock_head_total",
+                "1980-2017_livestock_tot_wat_consume"
+            ]
+        }
     }
 }

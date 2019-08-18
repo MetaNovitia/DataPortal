@@ -1,18 +1,17 @@
 import React, {Component} from 'react';
-import projects from './data/projects.json'
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Topic from './Topic/Topic.js'
+import Type from './components/Type.js'
 import $ from 'jquery';
 
-export default class ScrollableTabs extends Component {
+export default class TopicTabs extends Component {
 
     constructor(props){
         super(props);
         this.data = "";
         this.set = this.set.bind(this);
-        this.state = {topicIndex: -1};
+        this.state = {topicIndex: 0};
         this.handleChange = this.handleChange.bind(this);
         this.tabs = [];
         this.topic = null;
@@ -28,7 +27,7 @@ export default class ScrollableTabs extends Component {
                 <Tab key={i.toString()+"topic"} label={projects[i]}/>
             );
         }
-        this.topic = <Topic topicIndex={this.projects[0]}/>;
+        this.topic = <Type topicIndex={this.projects[0]}/>;
         this.setState({});
     }
 
@@ -42,7 +41,7 @@ export default class ScrollableTabs extends Component {
 
     handleChange(event, newValue) {
         if(this.state.topicIndex!==newValue){
-            this.topic = <Topic topicIndex={this.projects[newValue]}/>;
+            this.topic = <Type topicIndex={this.projects[newValue]}/>;
             this.setState({topicIndex: newValue});
         }
     }
@@ -54,7 +53,9 @@ export default class ScrollableTabs extends Component {
                 width: '100%',
                 backgroundColor: "white",
             }}>
-                <AppBar position="static" color="default">
+                <AppBar 
+                    position="static" 
+                    color="default">
                     <Tabs
                     TabIndicatorProps={{style: {backgroundColor: 'black'}}}
                     value={this.state.topicIndex}
@@ -63,11 +64,14 @@ export default class ScrollableTabs extends Component {
                     scrollButtons="on"
                     indicatorColor="primary"
                     textColor="inherit"
+                    style={{background:"#DDDDDD"}}
                     >
                     {this.tabs}
                     </Tabs>
                 </AppBar>
-                {this.topic}
+                <div style={{border:"5px solid transparent"}}>
+                    {this.topic}
+                </div>
             </div>
         );
     }

@@ -1,7 +1,4 @@
 import React, {Component} from 'react';
-import LineFrame from '../Timeline/LineFrame.js'
-import BarFrame from '../Bar/BarFrame.js'
-import ScatterFrame from '../Scatter/ScatterFrame.js'
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -12,12 +9,13 @@ import MapIcon from '@material-ui/icons/Map';
 import Button from '@material-ui/core/Button';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import htmlToImage from 'html-to-image';
-import { saveAs } from 'file-saver';
+import Topic from './Topic.js'
+// import { saveAs } from 'file-saver';
 
 const graphTypes = ["Line", "Bar", "Scatter", "Map"];
 const graphIcons = [<LineIcon />,<BarIcon />,<ScatterIcon />,<MapIcon />];
 
-export default class Topic extends Component {
+export default class Type extends Component {
 
     constructor(props){
         super(props);
@@ -25,7 +23,6 @@ export default class Topic extends Component {
         this.changeInnerTab = this.changeInnerTab.bind(this);
         this.download = this.download.bind(this);
         this.graphtabs      = [];
-        this.graph          = <LineFrame topicIndex={this.props.topicIndex}/>;
 
         for(var i in graphTypes){
             this.graphtabs.push(<Tab key={graphTypes[i]} label={graphTypes[i]} icon={graphIcons[i]}/>);
@@ -48,12 +45,6 @@ export default class Topic extends Component {
     }
 
     render(){
-        this.graph = [
-            <LineFrame topicIndex={this.props.topicIndex}/>,
-            <BarFrame topicIndex={this.props.topicIndex}/>,
-            <ScatterFrame topicIndex={this.props.topicIndex}/>,
-            <LineFrame topicIndex={this.props.topicIndex}/>
-        ][this.state.graphIndex];
 
         return (
             <div style={{
@@ -75,7 +66,8 @@ export default class Topic extends Component {
                     {this.graphtabs}
                     </Tabs>
                 </AppBar>
-                    {this.graph}
+                
+                <Topic topicIndex={this.props.topicIndex} graphIndex={this.state.graphIndex}/>
                 <br />
                 
                 <div style={{width:"100%",textAlign:"right"}}>
@@ -84,7 +76,6 @@ export default class Topic extends Component {
                             <CloudDownloadIcon style={{marginLeft:"10px"}}/>
                         </Button>
                     </div>
-                {/* <div><GrabData url="http://13.56.207.238:5000/database/1"/></div> */}
             </div>
         );
     }
