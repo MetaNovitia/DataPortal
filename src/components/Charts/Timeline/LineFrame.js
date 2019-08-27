@@ -25,21 +25,16 @@ export default class LineFrame extends Component {
         super(props);
         this.options = {
             category        : "None",
-            variable        : "",
             curve           : "cardinal",
-            normalizer      : "",
             stacked         : true,
             selectedKeys    : {}
         }
 
         this.data               = undefined;
         this.topicIndex         = -1;
-        this.variable           = "";
         this.type               = "";
         this.category           = "None";
-        this.variableItems      = [];
         this.categoryItems      = [];
-        this.normalizerItems    = [];
 
         this.legend             = [];
         this.colors             = {};
@@ -47,12 +42,16 @@ export default class LineFrame extends Component {
         this.filteredData       = [];
         this.filteredColors     = [];
         this.selectedChanged    = false;
-        this.normalizedData     = {};
+        // this.normalizedData     = {};
 
         this.changeInput        = this.changeInput.bind(this);
         this.checkBox           = this.checkBox.bind(this);
         this.set                = this.set.bind(this);
-        this.done               = false;
+        this.setNormalizer      = this.setNormalizer.bind(this);
+        this.done1              = false;
+        this.done2              = false;
+        this.normchanged        = false;
+        this.varchanged         = false;
     }
 
 
@@ -77,21 +76,31 @@ export default class LineFrame extends Component {
     }
     // ====================================================================== //
 
-    set(data){
-        this.data = data;
-        this.done = true;
+    setNormalizer(data){
+        this.normalizerdata = data;
+        this.done2 = true;
 
-        // update data to new topic's
-        this.topicIndex = this.props.topicIndex;
+        this.normalizer     = this.props.normalizer;
+        this.normchanged    = true;
 
         this.setState({});
     }
 
+    set(data){
+         
+        this.data = data;
+        this.done1 = true;
 
+        this.variable       = this.props.variable;
+        this.varchanged     = true;
+
+        this.setState({});
+    }
 
     
     render(){
-        if(this.topicIndex !== this.props.topicIndex){
+        if(this.variable !== this.props.variable){
+            this.done1 = false;
             // $.ajax({
             //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
             //     context: document.body,
@@ -102,9 +111,28 @@ export default class LineFrame extends Component {
                 "/" + this.props.type +
                 "/"+ this.props.variable +
                 ".json"));
+
+        }
+        
+        if(this.normalizer !== this.props.normalizer){
+            this.done2 = false;
+            if(this.props.normalizer!="None"){
+                // $.ajax({
+                //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     context: document.body,
+                //     crossDomain: true
+                // }).done(this.set);
+                this.setNormalizer(require(
+                    "../../../data/new/get/" + this.props.topicIndex+
+                    "/" + this.props.type +
+                    "/"+ this.props.normalizer +
+                    ".json"));
+            }else{
+                this.setNormalizer("None");
+            }
         }
 
-        if(this.data!==undefined){
+        if(this.done1 && this.done2){
 
             // ============================ General ========================== //
             var i = 0;      // array index
@@ -113,49 +141,25 @@ export default class LineFrame extends Component {
 
             // ============================= Init ============================= //
             var stacked         = this.options["stacked"];
-            var category        = this.options["category"];
             var curve           = this.options["curve"];
-            var variable        = this.options["variable"];
-            var normalizer      = this.options["normalizer"];
+            var category        = this.options["category"];
+            var type            = this.props.type;
+            var colorType       = this.props.colorType;
 
-            // =========================== Reload Topic =========================== //
-            if(this.done){
-                
-                // Variable Menu
-                this.variableItems = [];
-                for(key in this.data){
-                    this.variableItems.push(
-                        <MenuItem key={key} value={key}>{key}</MenuItem>
-                    );
-                }
-                
-                // initialize choices
-                variable =  Object.keys(this.data)[0];
-                this.options["variable"] = variable;
-            }
+            /*
+            // ------------------- Group Menu ------------------- //
+            this.categoryItems = [];
+            for(key in groupingdata){
+                this.categoryItems.push(
+                    <MenuItem key={key} value={key}>{key}</MenuItem>
+                );
+            }*/
 
-            // =========================== Reload Variable =========================== //
-            if(this.variable !== variable || this.done){
-
-                var groupingdata        = this.props.type;
-                var normalizerdata      = this.data;
-
-                this.options["category"]    = "None";
-                this.options["normalizer"]  = "";
-                category                    = "None";
-                normalizer                  = "";
-
-                /*
-                // ------------------- Group Menu ------------------- //
-                this.categoryItems = [];
-                for(key in groupingdata){
-                    this.categoryItems.push(
-                        <MenuItem key={key} value={key}>{key}</MenuItem>
-                    );
-                }*/
+            // =========================== Reload Type =========================== //
+            if(this.type !== type){
                 this.groups = {};
-                if(groupingdata==="Numerical"){
-                    var vItems = Object.keys(this.data[variable].data);
+                if(colorType === "Numerical"){
+                    var vItems = Object.keys(this.data);
 
                     this.groups["None"] = {};
                     for(i in vItems){
@@ -165,31 +169,19 @@ export default class LineFrame extends Component {
                     }
                 }
 
-                // ----------------- Normalizer Menu ----------------- //
-                // Normalize Menu
-                this.normalizerItems = [];
-                for(key in normalizerdata){
-                    this.normalizerItems.push(
-                        <MenuItem key={key} value={key}>{key}</MenuItem>
-                    );
-                }
-
                 // ------------------ Selected Keys ------------------ //
-                this.selectedChanged = true;
                 this.options["selectedKeys"] = {};
                 ct = 0;
-                for(key in this.data[variable].data){
+                for(key in this.data){
                     this.options["selectedKeys"][key] = ((ct++ % maxInitalKeys === 0) && ct!==1);
                 }
 
-
+                this.options["category"] = "None";
+                var category = this.options["category"];
             }
 
-            
-
             // =========================== Reload Category =========================== //
-            if(this.selectedChanged || this.category !== category || 
-                this.variable !== variable || this.done){
+            if(this.category !== category || this.type!== type || this.selectedChanged){
                 // --------------------- Legend --------------------- //
                 this.legend     = [];
                 this.colors     = {};
@@ -251,12 +243,11 @@ export default class LineFrame extends Component {
             }
 
             // =========================== Reload Selected =========================== //
-            if(this.selectedChanged){ 
+            if(this.selectedChanged || this.normchanged || this.varchanged){ 
                 this.filteredData       = [];
                 this.filteredColors     = [];
-                var temp_years_index    =   Object.keys(this.data[variable].data[
-                                                Object.keys(this.data[variable].data)[0]
-                                            ]);
+                
+                var temp_years_index    = Object.keys(this.data[Object.keys(this.data)[0]]);
                 var years_index         = {};
                 for(i in temp_years_index){
                     years_index[temp_years_index[i]] = i;
@@ -265,7 +256,7 @@ export default class LineFrame extends Component {
                 // filter
                 for(key in this.options.selectedKeys){
                     if(this.options.selectedKeys[key]){
-                        var t_entry = this.data[variable].data[key];
+                        var t_entry = this.data[key];
                         var normalizedEntry = {data:[],id:key};
 
                         // normalize data
@@ -273,8 +264,9 @@ export default class LineFrame extends Component {
 
                             var t_value         = t_entry[t_year];
                             var t_index         = years_index[t_year];
-                            if(normalizer !== ""){
-                                var t_normalizer    = this.data[normalizer][key][t_year];
+                            if(this.normalizer !== "None"){
+                                console.log(this.normalizerdata);
+                                var t_normalizer    = this.normalizerdata[key][t_year];
                                 if(t_normalizer!==undefined){
                                     normalizedEntry["data"][t_index] = {
                                         "x": t_year,
@@ -302,10 +294,13 @@ export default class LineFrame extends Component {
                 }
             }
 
-            this.variable           = variable;
             this.category           = category;
             this.selectedChanged    = false;
-            this.done               = false;
+            this.normchanged        = false;
+            this.varchanged         = false;
+            this.type               = type;
+            var title               = this.variable + " / "+ this.normalizer;
+            if(this.normalizer=="None") title = this.variable
 
             return (
                     <div>
@@ -318,7 +313,7 @@ export default class LineFrame extends Component {
                                             stacked = {stacked} 
                                             area    = {stacked}
                                             curve   = {curve}
-                                            title   = {this.data[variable].data.title}
+                                            title   = {title}
                                             colors  = {this.filteredColors}/>}
                             </div>
                     
@@ -353,43 +348,6 @@ export default class LineFrame extends Component {
                                     </Select>
                                 </div>
                                 <br/>
-
-                                {/* // --------------------------- Variable --------------------------- // */}
-                                <div>
-                                    <InputLabel shrink htmlFor="variable-label-placeholder">
-                                    Variable
-                                    </InputLabel>
-                                    <Select
-                                        style       = {{width:"100%"}}
-                                        value       = {variable}
-                                        onChange    = {this.changeInput}
-                                        input       = {<Input name="variable" id="variable-label-placeholder" />}
-                                        name        = "variable"
-                                        displayEmpty
-                                    >
-                                        {this.variableItems}
-                                    </Select>
-                                </div>
-                                <br />
-
-                                {/* // --------------------------- Normalize --------------------------- // */}
-                                <div>
-                                    <InputLabel shrink htmlFor="normalize-label-placeholder">
-                                    Normalize
-                                    </InputLabel>
-                                    <Select
-                                        style       = {{width:"100%"}}
-                                        value       = {normalizer}
-                                        onChange    = {this.changeInput}
-                                        input       = {<Input name="normalizer" id="normalize-label-placeholder" />}
-                                        name        = "normalizer"
-                                        displayEmpty
-                                    >
-                                        <MenuItem value={''}>None</MenuItem>
-                                        {this.normalizerItems}
-                                    </Select>
-                                </div>
-                                <br />
 
                                 {/* // --------------------------- Categorize --------------------------- // */}
                                 <div>
