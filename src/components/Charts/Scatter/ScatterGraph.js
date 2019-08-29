@@ -39,17 +39,7 @@ const Scatter = (props) => {
         
             <div style={{width:'100%',height:"500px"}} id="dp-graphdiv" position="relative">
         
-                {/* ----------------------------------- Year ----------------------------------- */}
-                <h2 style={{ 
-                    // position:"absolute",
-                    // top: this.parent().offet(),
-                    zIndex: 0,
-                    marginLeft: 60, 
-                    fontWeight: 400, 
-                    color: '#555', 
-                    textAlign:"center" }}>
-                    <strong style={{ color: 'black', fontWeight: 900 }}>{dataGenerator[current[0]][0]}</strong>
-                </h2>
+                
 
                 <ResponsiveScatterPlot
                     style={{zIndex: 1}}
@@ -60,7 +50,7 @@ const Scatter = (props) => {
                     // xFormat={function(e){return e+" kg"}}
                     yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
                     // yFormat={function(e){return e+" cm"}}
-                    colors={props.colors}
+                    colors={props.colors[current[0]]}
                     blendMode="multiply"
                     axisTop={null}
                     axisRight={null}
@@ -68,10 +58,10 @@ const Scatter = (props) => {
                         orient: 'bottom',
                         tickSize: 5,
                         tickPadding: 5,
-                        tickRotation: 0,
+                        tickRotation: -25,
                         legend: props.titleX,
                         legendPosition: 'middle',
-                        legendOffset: 46
+                        legendOffset: 60
                     }}
                     axisLeft={{
                         orient: 'left',
@@ -104,6 +94,18 @@ const Scatter = (props) => {
                       )}}
                 />
             </div>
+
+            {/* ----------------------------------- Year ----------------------------------- */}
+            <h2 style={{ 
+                    // position:"absolute",
+                    // top: this.parent().offet(),
+                    zIndex: 0,
+                    marginLeft: 60, 
+                    fontWeight: 400, 
+                    color: '#555', 
+                    textAlign:"center" }}>
+                    <strong style={{ color: 'black', fontWeight: 900 }}>{dataGenerator[current[0]][0]}</strong>
+                </h2>
 
             {/* --------------------------  Player and Progress Bar-------------------------- */}
             <Row style={{margin:0, padding:0, alignItems:"center"}}>

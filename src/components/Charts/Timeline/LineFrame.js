@@ -267,7 +267,7 @@ export default class LineFrame extends Component {
                             if(this.normalizer !== "None"){
                                 console.log(this.normalizerdata);
                                 var t_normalizer    = this.normalizerdata[key][t_year];
-                                if(t_normalizer!==undefined){
+                                if(t_normalizer!==undefined && t_normalizer!==0 && t_normalizer!==0.0){
                                     normalizedEntry["data"][t_index] = {
                                         "x": t_year,
                                         "y": t_value / t_normalizer

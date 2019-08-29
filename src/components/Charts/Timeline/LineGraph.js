@@ -16,7 +16,7 @@ export default class LineGraph extends Component {
                     <div id="dp-graphdiv" style={{height:"600px", width:"100%"}}>
                         <ResponsiveLine
                             data={this.props.data}
-                            margin={{ top: 50, right: 10, bottom: 50, left: 60 }}
+                            margin={{ top: 50, right: 25, bottom: 50, left: 80 }}
                             xScale={{ type: 'point', min: 'auto', max: 'auto' }}
                             yScale={{ type: 'linear', stacked: this.props.stacked, min: min, max: 'auto' }}
                             axisTop={null}
@@ -27,7 +27,7 @@ export default class LineGraph extends Component {
                                 tickPadding: 5,
                                 tickRotation: -55,
                                 legend: 'year',
-                                legendOffset: 36,
+                                legendOffset: 40,
                                 legendPosition: 'middle'
                             }}
                             axisLeft={{
@@ -36,7 +36,7 @@ export default class LineGraph extends Component {
                                 tickPadding: 2,
                                 tickRotation: 0,
                                 legend: this.props.title,
-                                legendOffset: -40,
+                                legendOffset: -70,
                                 legendPosition: 'middle'
                             }}
                             curve={this.props.curve}

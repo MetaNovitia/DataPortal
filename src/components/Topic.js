@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import LineFrame from './Charts/Timeline/LineFrame.js'
 // import BarFrame from '../Bar/BarFrame.js'
-// import ScatterFrame from '../Scatter/ScatterFrame.js'
+import ScatterFrame from './Charts/Scatter/ScatterFrame.js'
 import {Row} from 'reactstrap';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -83,9 +83,16 @@ export default class TypeTabs extends Component {
                     normalizer={this.state.normalizer} 
                     type={this.state.typeIndex}
                     colorType={this.data[this.state.typeIndex].Type}
-                    />,
+                    />,null,
                 // <BarFrame topicIndex={this.props.topicIndex}/>,
-                // <ScatterFrame topicIndex={this.props.topicIndex}/>,
+                <ScatterFrame 
+                    topicIndex={this.props.topicIndex} 
+                    variable={this.state.variable} 
+                    variableY={this.state.variableY} 
+                    normalizer={this.state.normalizer} 
+                    normalizerY={this.state.normalizerY} 
+                    type={this.state.typeIndex}
+                    colorType={this.data[this.state.typeIndex].Type} />,
                 // <LineFrame topicIndex={this.props.topicIndex}/>,
                 null,null,null,null
             ][this.props.graphIndex];

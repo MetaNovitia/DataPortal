@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import CloudDownloadIcon from '@material-ui/icons/CloudDownload';
 import htmlToImage from 'html-to-image';
 import Topic from './Topic.js'
-// import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver';
 
 const graphTypes = ["Line", "Bar", "Scatter", "Map"];
 const graphIcons = [<LineIcon />,<BarIcon />,<ScatterIcon />,<MapIcon />];
@@ -35,6 +35,8 @@ export default class Type extends Component {
         htmlToImage.toBlob(document.getElementById('dp-graphdiv'))
             .then(function (blob) {
             window.saveAs(blob, 'graph.png');
+            }).catch(function (error) {
+                alert("Please download using Google Chrome");
             });
 
         this.setState({});

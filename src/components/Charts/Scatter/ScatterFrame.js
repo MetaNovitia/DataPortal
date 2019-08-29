@@ -1,52 +1,40 @@
 /*
     Notes:
     - Group and Category are the same thing
-    - normalizer refers to Y
+
 */
 
 import React, {Component} from 'react';
 import { Row} from 'reactstrap';
-import ScatterGraph from './ScatterGraph.js';
+import ScatterGraph from './ScatterGraph.js'
+import Switch from "react-switch";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import { withStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
-import countries from '../data/map.json';
-import linear_colors from '../data/Numerical.json';
+import linear_colors from '../../../data/Numerical.json';
 import $ from 'jquery';
 
-const maxInitalKeys   = 10;
-const categoryTypes   = ["Numerical","Country","States","Other"];
-const countryGroups   = ["None","Region","Continent"]
+const maxInitalKeys   = 1;
 
-export default class ScatterFrame extends Component {
+export default class LineFrame extends Component {
 
     constructor(props){
         super(props);
         this.options = {
             category        : "None",
-            // variable        : categoryTypes[0],
-            variableX       : "",
-            variableY       : "",
-            normalizerX     : "",
-            normalizer      : "",
+            curve           : "cardinal",
+            stacked         : true,
             selectedKeys    : {}
         }
 
-        this.data               = {};
+        this.data               = undefined;
         this.topicIndex         = -1;
-        // this.variable           = categoryTypes[0];
-        this.variableX          = "";
-        this.variableY          = "";
+        this.type               = "";
         this.category           = "None";
-        this.variableItemsX    = [];
-        this.variableItemsY    = [];
         this.categoryItems      = [];
-        this.normalizerItems    = [];
-        this.keysXY             = [];
-        this.yearsXY            = [];
 
         this.legend             = [];
         this.colors             = {};
@@ -54,20 +42,20 @@ export default class ScatterFrame extends Component {
         this.filteredData       = [];
         this.filteredColors     = [];
         this.selectedChanged    = false;
-        this.normalizedData     = {};
+        // this.normalizedData     = {};
 
         this.changeInput        = this.changeInput.bind(this);
         this.checkBox           = this.checkBox.bind(this);
         this.set                = this.set.bind(this);
-        this.done               = false;
-
-        // this.variableItems = [];
-        // for(var i in categoryTypes){
-        //     var key = categoryTypes[i];
-        //     this.variableItemsXY.push(
-        //         <MenuItem key={key} value={key}>{key}</MenuItem>
-        //     );
-        // }
+        this.setY               = this.setY.bind(this);
+        this.setNormalizer      = this.setNormalizer.bind(this);
+        this.setNormalizerY     = this.setNormalizerY.bind(this);
+        this.done1              = false;
+        this.done2              = false;
+        this.done1Y             = false;
+        this.done2Y             = false;
+        this.normchanged        = false;
+        this.varchanged         = false;
     }
 
 
@@ -79,35 +67,132 @@ export default class ScatterFrame extends Component {
     }
 
     changeInput(event){
-        this.options[event.target.name] = event.target.value;
-        if(event.target.name==="normalizer"||event.target.name==="normalizerX") this.selectedChanged = true;
+        if(event==="stacked"){
+            this.options.stacked = !this.options.stacked;
+        }else{
+            if( event.target.name==="normalizer" && 
+                this.options[event.target.name] !== event.target.value){
+                this.selectedChanged = true;
+            }
+            this.options[event.target.name] = event.target.value;
+        }
         this.setState({});
     }
     // ====================================================================== //
 
-    set(data){
-        this.data = data.topics;
-        this.done = true;
+    setNormalizerY(data){
+        this.normalizerdataY = data;
+        this.done2Y = true;
 
-        // update data to new topic's
-        this.topicIndex = this.props.topicIndex;
-        
+        this.normalizerY     = this.props.normalizerY;
+        this.normchanged    = true;
+
         this.setState({});
     }
+
+    setNormalizer(data){
+        this.normalizerdata = data;
+        this.done2 = true;
+
+        this.normalizer     = this.props.normalizer;
+        this.normchanged    = true;
+
+        this.setState({});
+    }
+
+    setY(data){
+         
+        this.dataY = data;
+        this.done1Y = true;
+
+        this.variableY       = this.props.variableY;
+        this.varchanged      = true;
+
+        this.setState({});
+    }
+
+    set(data){
+         
+        this.data = data;
+        this.done1 = true;
+
+        this.variable       = this.props.variable;
+        this.varchanged     = true;
+
+        this.setState({});
+    }
+
     
     render(){
-
-        if(this.topicIndex !== this.props.topicIndex){
+        if(this.variable !== this.props.variable){
+            this.done1 = false;
             // $.ajax({
             //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
             //     context: document.body,
             //     crossDomain: true
             // }).done(this.set);
-            this.set(require("../data/"+this.props.topicIndex+".json"));
+            this.set(require(
+                "../../../data/new/get/" + this.props.topicIndex+
+                "/" + this.props.type +
+                "/"+ this.props.variable +
+                ".json"));
+
         }
 
-        if(this.data!==undefined){
+        if(this.variableY !== this.props.variableY){
+            this.done1Y = false;
+            // $.ajax({
+            //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+            //     context: document.body,
+            //     crossDomain: true
+            // }).done(this.set);
+            this.setY(require(
+                "../../../data/new/get/" + this.props.topicIndex+
+                "/" + this.props.type +
+                "/"+ this.props.variableY +
+                ".json"));
 
+        }
+        
+        if(this.normalizer !== this.props.normalizer){
+            this.done2 = false;
+            if(this.props.normalizer!="None"){
+                // $.ajax({
+                //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     context: document.body,
+                //     crossDomain: true
+                // }).done(this.set);
+                this.setNormalizer(require(
+                    "../../../data/new/get/" + this.props.topicIndex+
+                    "/" + this.props.type +
+                    "/"+ this.props.normalizer +
+                    ".json"));
+            }else{
+                this.setNormalizer("None");
+            }
+        }
+
+        if(this.normalizerY !== this.props.normalizerY){
+            this.done2Y = false;
+            if(this.props.normalizerY!="None"){
+                // $.ajax({
+                //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     context: document.body,
+                //     crossDomain: true
+                // }).done(this.set);
+                this.setNormalizerY(require(
+                    "../../../data/new/get/" + this.props.topicIndex+
+                    "/" + this.props.type +
+                    "/"+ this.props.normalizerY +
+                    ".json"));
+            }else{
+                this.setNormalizerY("None");
+            }
+        }
+
+        if(this.done1 && this.done2 && this.done1Y && this.done2Y){
+
+            console.log("re");
 
             // ============================ General ========================== //
             var i = 0;      // array index
@@ -115,104 +200,48 @@ export default class ScatterFrame extends Component {
             var key = "";   // object key
 
             // ============================= Init ============================= //
-            var topicIndex      = this.props.topicIndex;
+            var stacked         = this.options["stacked"];
+            var curve           = this.options["curve"];
             var category        = this.options["category"];
-            // var variable        = this.options["variable"];
-            var variableX       = this.options["variableX"];
-            var variableY       = this.options["variableY"];
-            var normalizerX     = this.options["normalizerX"];
-            var normalizer      = this.options["normalizer"];
-            var displayCategory = "initial"
+            var type            = this.props.type;
+            var colorType       = this.props.colorType;
 
-            // =========================== Reload Topic =========================== //
-            if(this.done){
-            //     // ------------------- Variable Menu ------------------- //
-            //     this.options["variable"] = categoryTypes[0];
-            // }
+            /*
+            // ------------------- Group Menu ------------------- //
+            this.categoryItems = [];
+            for(key in groupingdata){
+                this.categoryItems.push(
+                    <MenuItem key={key} value={key}>{key}</MenuItem>
+                );
+            }*/
 
-
-            // // =========================== Reload Variable =========================== //
-            // if(this.variable !== variable || this.done){
-
-                // if(variable === "Numerical"){
-                //     displayCategory = "none";
-                // }
-
-                // ------------------- VariableXY Menu ------------------- //
-                this.variableItemsXY = [];
-                var headers = [];
-                for(i in this.data){
-                    key = this.data[i];
-                    headers.push(key);
-                    this.variableItemsX.push(
-                        <MenuItem key={key} value={key}>{key}</MenuItem>
-                    );
-                }
-
-                variableX  = headers[0];
-                variableY  = headers[0];
-                if(headers.length > 1) variableY  = headers[1];
-                this.options["variableX"] = variableX;
-                this.options["variableY"] = variableY;
-
-                var groupingdata        = this.data[variableX].type;
-                var normalizerdata      = this.data;
-
-                this.options["normalizerX"] = "";
-                this.options["category"]    = "None";
-                this.options["normalizer"]  = "";
-                category                    = "None";
-                normalizerX                 = "";
-                normalizer                  = "";
-
-                // // ------------------- Group Menu ------------------- //
-                // this.categoryItems = [];
-                // for(key in groupingdata){
-                //     this.categoryItems.push(
-                //         <MenuItem key={key} value={key}>{key}</MenuItem>
-                //     );
-                // }
-
-                // ----------------- Normalizer Menu ----------------- //
-                // Normalize Menu
-                this.normalizerItems = [];
-                for(key in normalizerdata){
-                    this.normalizerItems.push(
-                        <MenuItem key={key} value={key}>{key}</MenuItem>
-                    );
-                }
-
-                // ------------------ Selected Keys ------------------ //
-                this.selectedChanged = true;
-                this.options["selectedKeys"] = {};
-                ct = 0;
-                for(key in this.data[variableX]){
-                    this.options["selectedKeys"][key] = (ct++ < maxInitalKeys);
-                }
-
-            }
-
-            if(this.variableX!==variableX || this.variableY!==variableY){
-                this.options["category"]    = "None";
+            // =========================== Reload Type =========================== //
+            if(this.type !== type){
                 this.groups = {};
-                if(variable==="Numerical"){
+                if(colorType === "Numerical"){
+                    var vItems = Object.keys(this.data);
 
                     this.groups["None"] = {};
-                    var vItems = Object.keys(this.data[variable]);
-
                     for(i in vItems){
                         this.groups["None"][vItems[i]] = {
-                            "color": linear_colors["jet"][Math.floor(i/vItems.length)]
+                            "color": linear_colors["cool"][Math.floor(i/vItems.length*1000)]
                         };
                     }
                 }
+
+                // ------------------ Selected Keys ------------------ //
+                this.options["selectedKeys"] = {};
+                ct = 0;
+                for(key in this.data){
+                    this.options["selectedKeys"][key] = ((ct++ % maxInitalKeys === 0) && ct!==1);
+                }
+
+                this.options["category"] = "None";
+                var category = this.options["category"];
             }
 
-            
-
             // =========================== Reload Category =========================== //
-            if(this.selectedChanged || this.category !== category || 
-                this.variable !== variable || this.topicIndex !== topicIndex){
+            if(this.category !== category || this.type!== type || this.selectedChanged){
                 // --------------------- Legend --------------------- //
                 this.legend     = [];
                 this.colors     = {};
@@ -274,17 +303,16 @@ export default class ScatterFrame extends Component {
             }
 
             // =========================== Reload Selected =========================== //
-            if(this.selectedChanged || this.variableX !== variableX || this.variableY !== variableY){ 
+            if(this.selectedChanged || this.normchanged || this.varchanged){ 
                 this.filteredData   = [];
                 this.filteredColors = [];
-                var temp_years_index    = Object.keys(this.data[variableX][Object.keys(this.data[variableX])[0]]);
+                var temp_years_index    = Object.keys(this.data[Object.keys(this.data)[0]]);
                 var years_index         = {};
                 for(i in temp_years_index){
-                    years_index[temp_years_index[i]] = i;
-                }
-
-                for(key in years_index){
-                    this.filteredData[years_index[key]] = [key,[]]; 
+                    var year = temp_years_index[i];
+                    years_index[year] = i;
+                    this.filteredData[i] = [year,[]]; 
+                    this.filteredColors.push([]);
                 }
 
                 // filter
@@ -296,188 +324,97 @@ export default class ScatterFrame extends Component {
 
                             var normalizedEntry = {data:[],id:key};
                             var t_index         = years_index[t_year];
-                            var t_normalizedX   = this.data[variableX][t_year];
-                            var t_normalized    = this.data[variableY][t_year];
+                            var t_normalized   = this.data[key][t_year];
+                            var t_normalizedY    = this.dataY[key][t_year];
 
-                            if(normalizerX !== ""){
-                                var t_normalizerX = this.data[variable]["normalizer"][normalizerX][key][t_year];
-                                if(t_normalizerX!==undefined){
-                                    t_normalizedX/=t_normalizerX;
-                                }else{
-                                    t_normalizedX = null;
-                                }
-
-                            }
-                            if(normalizer !== ""){
-                                var t_normalize   = this.data[variable]["normalizer"][normalizer][key][t_year];
-                                if(t_normalize!==undefined){
-                                    t_normalized/=t_normalize;
-                                }else{
-                                    t_normalize = null;
-                                }
+                            if(this.normalizer !== "None"){
+                                t_normalized /= this.normalizerdata[key][t_year];
+                                
                             }
 
-                            normalizedEntry["data"].push( {
-                                "x": t_normalizedX,
-                                "y": t_normalized
-                            });
-                            this.filteredData[t_index][1].push(normalizedEntry);
+                            if(this.normalizerY !== "None"){
+                                t_normalizedY /= this.normalizerdataY[key][t_year];
+                            }
+
+                            if(!Number.isNaN(t_normalized) && !Number.isNaN(t_normalizedY)
+                                && t_normalized!==null && t_normalizedY!==null
+                                && t_normalized!==undefined && t_normalizedY!==undefined){
+                                normalizedEntry["data"].push( {
+                                    "x": t_normalized,
+                                    "y": t_normalizedY
+                                });
+
+                                
+
+                                this.filteredData[t_index][1].push(normalizedEntry);
+                                this.filteredColors[t_index].push(this.colors[key]);
+                            }
                         }
-
-                        this.filteredColors.push(this.colors[key]);
                     }
                 }
             }
-            console.log(this.filteredData);
 
-            this.topicIndex         = topicIndex;
-            this.variable           = variable;
-            this.variableX          = variableX;
-            this.variableY          = variableY;
             this.category           = category;
             this.selectedChanged    = false;
+            this.normchanged        = false;
+            this.varchanged         = false;
+            this.type               = type;
+            var title               = this.variable + " / "+ this.normalizer;
+            if(this.normalizer=="None") title = this.variable
+            var titleY              = this.variableY + " / "+ this.normalizerY;
+            if(this.normalizerY=="None") titleY = this.variableY
 
             return (
-                    <Row style={{width:"100%", margin:"0", padding:"0"}}>
+                    <div>
+                        <Row style={{width:"100%", margin:"0", padding:"0"}}>
 
-                        {/* // =========================== Graph =========================== // */}
-                        <div style={{height:"600px", width:"77%"}}>
-                            {<ScatterGraph
-                                    titleX={variableX}
-                                    titleY={variableY}
-                                    dataGenerator={this.filteredData}
-                                    colors={this.filteredColors}
-                                />}
-                        </div>
-                
-                        {/* // =========================== Options =========================== // */}
-                        <div style={{height:"600px", width:"23%", padding:'2%', overflowY: "scroll"}}>
-
-                            {/* // --------------------------- Variable --------------------------- // */}
-                            <div>
-                                <InputLabel shrink htmlFor="variable-label-placeholder">
-                                Plot
-                                </InputLabel>
-                                <Select
-                                    style       = {{width:"100%"}}
-                                    value       = {variable}
-                                    onChange    = {this.changeInput}
-                                    input       = {<Input name="variable" id="variable-label-placeholder" />}
-                                    name        = "variable"
-                                    displayEmpty
-                                >
-                                    {this.variableItems}
-                                </Select>
+                            {/* // =========================== Graph =========================== // */}
+                            <div style={{height:"600px", width:"77%"}}>
+                                {<ScatterGraph
+                                        titleX={title}
+                                        titleY={titleY}
+                                        dataGenerator={this.filteredData}
+                                        colors={this.filteredColors}
+                                    />}
                             </div>
-                            <br/>
+                    
+                            {/* // =========================== Options =========================== // */}
+                            <div style={{height:"600px", width:"23%", padding:'2%', overflowY: "scroll"}}>
 
-                            {/* // --------------------------- VariableX --------------------------- // */}
-                            <div>
-                                <InputLabel shrink htmlFor="variableX-label-placeholder">
-                                X Values
-                                </InputLabel>
-                                <Select
-                                    style       = {{width:"100%"}}
-                                    value       = {variableX}
-                                    onChange    = {this.changeInput}
-                                    input       = {<Input name="variableX" id="variableX-label-placeholder" />}
-                                    name        = "variableX"
-                                    displayEmpty
-                                >
-                                    {this.variableItemsXY}
-                                </Select>
-                            </div>
-                            <br />
+                                {/* // --------------------------- Categorize --------------------------- // */}
+                                <div>
+                                    <InputLabel shrink htmlFor="categorize-label-placeholder">
+                                    Categorize
+                                    </InputLabel>
+                                    <Select
+                                        style       = {{width:"100%"}}
+                                        value       = {category}
+                                        onChange    = {this.changeInput}
+                                        input       = {<Input name="categorize" id="categorize-label-placeholder" />}
+                                        name        = "category"
+                                        displayEmpty
+                                    >
+                                        {this.categoryItems}
+                                    </Select>
+                                </div>
+                                <br />
 
-                            {/* // --------------------------- NormalizeX --------------------------- // */}
-                            <div>
-                                <InputLabel shrink htmlFor="normalizeX-label-placeholder">
-                                X Normalizer
-                                </InputLabel>
-                                <Select
-                                    style       = {{width:"100%"}}
-                                    value       = {normalizerX}
-                                    onChange    = {this.changeInput}
-                                    input       = {<Input name="normalizerX" id="normalizeX-label-placeholder" />}
-                                    name        = "normalizerX"
-                                    displayEmpty
-                                >
-                                    <MenuItem value={''}>None</MenuItem>
-                                    {this.normalizerItems}
-                                </Select>
-                            </div>
-                            <br />
-
-                            {/* // --------------------------- VariableY --------------------------- // */}
-                            <div>
-                                <InputLabel shrink htmlFor="variableY-label-placeholder">
-                                Y Values
-                                </InputLabel>
-                                <Select
-                                    style       = {{width:"100%"}}
-                                    value       = {variableY}
-                                    onChange    = {this.changeInput}
-                                    input       = {<Input name="variableY" id="variableY-label-placeholder" />}
-                                    name        = "variableY"
-                                    displayEmpty
-                                >
-                                    {this.variableItemsXY}
-                                </Select>
-                            </div>
-                            <br />
-
-                            {/* // --------------------------- NormalizeY --------------------------- // */}
-                            <div>
-                                <InputLabel shrink htmlFor="normalize-label-placeholder">
-                                Y Normalizer
-                                </InputLabel>
-                                <Select
-                                    style       = {{width:"100%"}}
-                                    value       = {normalizer}
-                                    onChange    = {this.changeInput}
-                                    input       = {<Input name="normalizer" id="normalize-label-placeholder" />}
-                                    name        = "normalizer"
-                                    displayEmpty
-                                >
-                                    <MenuItem value={''}>None</MenuItem>
-                                    {this.normalizerItems}
-                                </Select>
-                            </div>
-                            <br />
-
-                            {/* // --------------------------- Categorize --------------------------- // */}
-                            <div>
-                                <InputLabel shrink htmlFor="categorize-label-placeholder">
-                                Categorize
-                                </InputLabel>
-                                <Select
-                                    style       = {{width:"100%",display:displayCategory}}
-                                    value       = {category}
-                                    onChange    = {this.changeInput}
-                                    input       = {<Input name="categorize" id="categorize-label-placeholder" />}
-                                    name        = "category"
-                                    displayEmpty
-                                >
-                                    {this.categoryItems}
-                                </Select>
-                            </div>
-                            <br style={{display:displayCategory}}/>
-
-                            {/* // --------------------------- Legend --------------------------- // */}
-                            <div>
-                                <div style={{
-                                            display         : "inline-table",
-                                            width           : "100%",
-                                            minWidth        : "100%",
-                                            whiteSpace      : "nowrap",
-                                            borderRadius    : "2px",
-                                            fontFamily      : "Georgia"
-                                        }}>
-                                    {this.legend}
+                                {/* // --------------------------- Legend --------------------------- // */}
+                                <div>
+                                    <div style={{
+                                                display         : "inline-table",
+                                                width           : "100%",
+                                                minWidth        : "100%",
+                                                whiteSpace      : "nowrap",
+                                                borderRadius    : "2px",
+                                                fontFamily      : "Georgia"
+                                            }}>
+                                        {this.legend}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                </Row>
+                    </Row>
+                </div>
             );
         }
         return null;
