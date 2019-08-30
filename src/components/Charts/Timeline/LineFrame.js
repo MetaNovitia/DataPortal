@@ -102,7 +102,7 @@ export default class LineFrame extends Component {
         if(this.variable !== this.props.variable){
             this.done1 = false;
             // $.ajax({
-            //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+            //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
             //     context: document.body,
             //     crossDomain: true
             // }).done(this.set);
@@ -116,9 +116,9 @@ export default class LineFrame extends Component {
         
         if(this.normalizer !== this.props.normalizer){
             this.done2 = false;
-            if(this.props.normalizer!="None"){
+            if(this.props.normalizer!=="None"){
                 // $.ajax({
-                //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
                 //     context: document.body,
                 //     crossDomain: true
                 // }).done(this.set);
@@ -177,7 +177,7 @@ export default class LineFrame extends Component {
                 }
 
                 this.options["category"] = "None";
-                var category = this.options["category"];
+                category = this.options["category"];
             }
 
             // =========================== Reload Category =========================== //
@@ -300,7 +300,7 @@ export default class LineFrame extends Component {
             this.varchanged         = false;
             this.type               = type;
             var title               = this.variable + " / "+ this.normalizer;
-            if(this.normalizer=="None") title = this.variable
+            if(this.normalizer==="None") title = this.variable
 
             return (
                     <div>
@@ -362,6 +362,7 @@ export default class LineFrame extends Component {
                                         name        = "category"
                                         displayEmpty
                                     >
+                                        <MenuItem value={"None"}>None</MenuItem>
                                         {this.categoryItems}
                                     </Select>
                                 </div>

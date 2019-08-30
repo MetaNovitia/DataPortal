@@ -19,18 +19,19 @@ import $ from 'jquery';
 
 const maxInitalKeys   = 40;
 
-export default class LineFrame extends Component {
+export default class BarFrame extends Component {
 
     constructor(props){
         super(props);
         this.options = {
             category        : "None",
-            curve           : "cardinal",
             stacked         : true,
-            selectedKeys    : {}
+            selectedKeys    : {},
+            ranking         : "top",
+            numberOfItems   : 4
         }
 
-        this.data               = undefined;
+        this.data               = {};
         this.topicIndex         = -1;
         this.type               = "";
         this.category           = "None";
@@ -52,6 +53,7 @@ export default class LineFrame extends Component {
         this.done2              = false;
         this.normchanged        = false;
         this.varchanged         = false;
+        this.changedMul         = undefined;
     }
 
 
@@ -86,10 +88,10 @@ export default class LineFrame extends Component {
         this.setState({});
     }
 
-    set(data){
+    set(data,i){
          
-        this.data = data;
-        this.done1 = true;
+        this.data[this.props.mul[i]] = data;
+        this.done1[i] = true;
 
         this.variable       = this.props.variable;
         this.varchanged     = true;
@@ -99,26 +101,37 @@ export default class LineFrame extends Component {
 
     
     render(){
-        if(this.variable !== this.props.variable){
-            this.done1 = false;
+
+
+        // ============================ General ========================== //
+        var i = 0;      // array index
+        var ct = 0;     // counter
+        var key = "";   // object key
+
+        if(this.changedMul !== this.props.changedMul){
+            this.changedMul = this.props.changedMul;
+            this.done1 = [];
+            this.data = {};
             // $.ajax({
-            //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+            //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
             //     context: document.body,
             //     crossDomain: true
             // }).done(this.set);
-            this.set(require(
-                "../../../data/new/get/" + this.props.topicIndex+
-                "/" + this.props.type +
-                "/"+ this.props.variable +
-                ".json"));
-
+            for(i in this.props.mul){
+                this.done1.push(false);
+                this.set(require(
+                    "../../../data/new/get/" + this.props.topicIndex+
+                    "/" + this.props.type +
+                    "/"+ this.props.mul[i] +
+                    ".json"),i);
+            }
         }
         
         if(this.normalizer !== this.props.normalizer){
             this.done2 = false;
-            if(this.props.normalizer!="None"){
+            if(this.props.normalizer!=="None"){
                 // $.ajax({
-                //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
                 //     context: document.body,
                 //     crossDomain: true
                 // }).done(this.set);
@@ -132,19 +145,26 @@ export default class LineFrame extends Component {
             }
         }
 
-        if(this.done1 && this.done2){
+        // check if all variables are read
+        this.done = true;
+        for(i=0; i<this.props.mul.length; i++){
+            if(this.done1[i]!==true){
+                this.done=false;
+                break;
+            }
+        }
+        console.log(this.props.mul,this.done,this.changedMul,this.props.changedMul,this.done1);
 
-            // ============================ General ========================== //
-            var i = 0;      // array index
-            var ct = 0;     // counter
-            var key = "";   // object key
+        if(this.done && this.done2 && Object.keys(this.data).length!==0){
 
             // ============================= Init ============================= //
             var stacked         = this.options["stacked"];
-            var curve           = this.options["curve"];
             var category        = this.options["category"];
             var type            = this.props.type;
             var colorType       = this.props.colorType;
+            var firstVar        = Object.keys(this.data)[0];
+            var numberOfItems   = this.options["numberOfItems"];
+            var ranking         = this.options["ranking"];
 
             /*
             // ------------------- Group Menu ------------------- //
@@ -159,7 +179,7 @@ export default class LineFrame extends Component {
             if(this.type !== type){
                 this.groups = {};
                 if(colorType === "Numerical"){
-                    var vItems = Object.keys(this.data);
+                    var vItems = Object.keys(this.data[firstVar]);
 
                     this.groups["None"] = {};
                     for(i in vItems){
@@ -172,12 +192,12 @@ export default class LineFrame extends Component {
                 // ------------------ Selected Keys ------------------ //
                 this.options["selectedKeys"] = {};
                 ct = 0;
-                for(key in this.data){
+                for(key in this.data[firstVar]){
                     this.options["selectedKeys"][key] = ((ct++ % maxInitalKeys === 0) && ct!==1);
                 }
 
                 this.options["category"] = "None";
-                var category = this.options["category"];
+                category = this.options["category"];
             }
 
             // =========================== Reload Category =========================== //
@@ -186,6 +206,7 @@ export default class LineFrame extends Component {
                 this.legend     = [];
                 this.colors     = {};
                 var colorcode   = this.groups[category];
+                if(category==="_items") colorcode = this.groups["None"];
 
                 for(key in colorcode){
                     var color = colorcode[key]["color"];
@@ -246,19 +267,21 @@ export default class LineFrame extends Component {
             if(this.selectedChanged || this.normchanged || this.varchanged){ 
                 this.filteredColors = [];
                 this.filteredData   = [];
-                var years_index = Object.keys(this.data[Object.keys(this.data)[0]]);
+                var firstItem = Object.keys(this.data[firstVar])[0];
+                var temp_years_index = Object.keys(this.data[firstVar][firstItem]);
+                var years_index = {};
 
-                for(key in years_index){
-                    this.filteredData[years_index[key]] = [key,[]]; 
+                for(key in temp_years_index){
+                    years_index[temp_years_index[key]] = key;
+                    this.filteredData[key] = [temp_years_index[key],[]]; 
                 }
 
                 // filter
                 for(key in this.options.selectedKeys){
                     if(this.options.selectedKeys[key]){
-                        var t_entry = this.data[key];
 
                         // normalize data
-                        for(var t_year in t_entry){
+                        for(var t_year in years_index){
 
                             var normalizedEntry = {
                                 "id" : key
@@ -267,14 +290,16 @@ export default class LineFrame extends Component {
                             var t_index         = years_index[t_year];
                             var t_sum           = 0;
                             var t_normalizer    = 1;
-                            if(normalizer !== ""){
-                                t_normalizer = this.normalizerdata[key][t_year];
-                                if(t_normalizer!==0 && t_normalizer !== 0.0) t_normalizer    = 1;
-                            }
+                            if(this.normalizer !== "None") t_normalizer = this.normalizerdata[key][t_year];
                             
-                            for(var item in t_entry[t_year]){
-                                normalizedEntry[item] = t_entry[t_year][item] / t_normalizer;
-                                t_sum += normalizedEntry[item];
+                            for(var item in this.data){
+                                var n_entry = this.data[item][key][t_year] / t_normalizer;
+                                if(!Number.isNaN(n_entry)){
+                                    normalizedEntry[item] = n_entry;
+                                    t_sum += normalizedEntry[item];
+                                }else{
+                                    normalizedEntry[item] = 0;
+                                }
                             }
                             
                             normalizedEntry["_total"]   = t_sum;
@@ -294,7 +319,7 @@ export default class LineFrame extends Component {
             this.varchanged         = false;
             this.type               = type;
             var title               = this.variable + " / "+ this.normalizer;
-            if(this.normalizer=="None") title = this.variable
+            if(this.normalizer==="None") title = this.variable
 
             return (
                     <div>
@@ -306,7 +331,7 @@ export default class LineFrame extends Component {
                                     data            = {this.filteredData} 
                                     groupMode       = {stacked}
                                     title           = {title}
-                                    pkeys           = {this.options.selectedItems}
+                                    pkeys           = {this.props.mul}
                                     numberOfItems   = {numberOfItems}
                                     ranking         = {ranking}
                                 />}
@@ -325,25 +350,6 @@ export default class LineFrame extends Component {
                                 </Row>
                                 <br />
 
-                                {/* // --------------------------- Curve --------------------------- // */}
-                                <div>
-                                    <InputLabel shrink htmlFor="curve-label-placeholder">
-                                    Curve Type
-                                    </InputLabel>
-                                    <Select
-                                        style       = {{width:"100%"}}
-                                        value       = {curve}
-                                        onChange    = {this.changeInput}
-                                        input       = {<Input name="curve" id="curve-label-placeholder" />}
-                                        name        = "curve"
-                                        displayEmpty
-                                    >
-                                        <MenuItem value={'cardinal'}>Curved</MenuItem>
-                                        <MenuItem value={'linear'}  >Linear</MenuItem>
-                                    </Select>
-                                </div>
-                                <br/>
-
                                 {/* // --------------------------- Categorize --------------------------- // */}
                                 <div>
                                     <InputLabel shrink htmlFor="categorize-label-placeholder">
@@ -357,7 +363,41 @@ export default class LineFrame extends Component {
                                         name        = "category"
                                         displayEmpty
                                     >
+                                        <MenuItem value={"None"}>By Variable</MenuItem>
+                                        <MenuItem value={"_items"}>By Item</MenuItem>
                                         {this.categoryItems}
+                                    </Select>
+                                </div>
+                                <br />
+
+                                {/* // --------------------------- Top/Bottom --------------------------- // */}
+                                <div style={{width:"100%"}}>
+                                    <InputLabel shrink htmlFor="ranking-label-placeholder">
+                                    Ranking
+                                    </InputLabel>
+                                    <Select
+                                        style       = {{width:"60%"}}
+                                        value       = {ranking}
+                                        onChange    = {this.changeInput}
+                                        input       = {<Input name="ranking" id="ranking-label-placeholder" />}
+                                        name        = "ranking"
+                                        displayEmpty
+                                    >
+                                        <MenuItem value={"top"}>Top</MenuItem>
+                                        <MenuItem value={"bottom"}>Bottom</MenuItem>
+                                    </Select>
+                                    <Select
+                                        style       = {{width:"39%",marginLeft:"1%"}}
+                                        value       = {numberOfItems}
+                                        onChange    = {this.changeInput}
+                                        input       = {<Input name="numberOfItems" id="numberOfItems-label-placeholder" />}
+                                        name        = "numberOfItems"
+                                        displayEmpty
+                                    >
+                                        <MenuItem value={1}>1</MenuItem>
+                                        <MenuItem value={2}>2</MenuItem>
+                                        <MenuItem value={3}>3</MenuItem>
+                                        <MenuItem value={4}>4</MenuItem>
                                     </Select>
                                 </div>
                                 <br />

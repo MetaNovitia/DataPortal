@@ -7,7 +7,6 @@
 import React, {Component} from 'react';
 import { Row} from 'reactstrap';
 import ScatterGraph from './ScatterGraph.js'
-import Switch from "react-switch";
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -19,7 +18,7 @@ import $ from 'jquery';
 
 const maxInitalKeys   = 1;
 
-export default class LineFrame extends Component {
+export default class ScatterFrame extends Component {
 
     constructor(props){
         super(props);
@@ -127,7 +126,7 @@ export default class LineFrame extends Component {
         if(this.variable !== this.props.variable){
             this.done1 = false;
             // $.ajax({
-            //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+            //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
             //     context: document.body,
             //     crossDomain: true
             // }).done(this.set);
@@ -142,7 +141,7 @@ export default class LineFrame extends Component {
         if(this.variableY !== this.props.variableY){
             this.done1Y = false;
             // $.ajax({
-            //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+            //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
             //     context: document.body,
             //     crossDomain: true
             // }).done(this.set);
@@ -156,9 +155,9 @@ export default class LineFrame extends Component {
         
         if(this.normalizer !== this.props.normalizer){
             this.done2 = false;
-            if(this.props.normalizer!="None"){
+            if(this.props.normalizer!=="None"){
                 // $.ajax({
-                //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
                 //     context: document.body,
                 //     crossDomain: true
                 // }).done(this.set);
@@ -174,9 +173,9 @@ export default class LineFrame extends Component {
 
         if(this.normalizerY !== this.props.normalizerY){
             this.done2Y = false;
-            if(this.props.normalizerY!="None"){
+            if(this.props.normalizerY!=="None"){
                 // $.ajax({
-                //     url: "http://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
                 //     context: document.body,
                 //     crossDomain: true
                 // }).done(this.set);
@@ -200,8 +199,6 @@ export default class LineFrame extends Component {
             var key = "";   // object key
 
             // ============================= Init ============================= //
-            var stacked         = this.options["stacked"];
-            var curve           = this.options["curve"];
             var category        = this.options["category"];
             var type            = this.props.type;
             var colorType       = this.props.colorType;
@@ -237,7 +234,7 @@ export default class LineFrame extends Component {
                 }
 
                 this.options["category"] = "None";
-                var category = this.options["category"];
+                category = this.options["category"];
             }
 
             // =========================== Reload Category =========================== //
@@ -360,9 +357,9 @@ export default class LineFrame extends Component {
             this.varchanged         = false;
             this.type               = type;
             var title               = this.variable + " / "+ this.normalizer;
-            if(this.normalizer=="None") title = this.variable
+            if(this.normalizer==="None") title = this.variable
             var titleY              = this.variableY + " / "+ this.normalizerY;
-            if(this.normalizerY=="None") titleY = this.variableY
+            if(this.normalizerY==="None") titleY = this.variableY
 
             return (
                     <div>
@@ -395,6 +392,7 @@ export default class LineFrame extends Component {
                                         displayEmpty
                                     >
                                         {this.categoryItems}
+                                        <MenuItem value={"None"}>None</MenuItem>
                                     </Select>
                                 </div>
                                 <br />

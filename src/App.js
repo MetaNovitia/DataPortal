@@ -32,11 +32,13 @@ export default class TopicTabs extends Component {
     }
 
     componentDidMount(){
+        /*
         $.ajax({
-            url: "http://54.219.61.146:5000/new/list",
+            url: "https://54.219.61.146:5000/new/list",
             context: document.body,
             crossDomain: true
-        }).done(this.set);
+        }).done(this.set);*/
+        this.set(require("./data/new/list.json"));
     }
 
     handleChange(event, newValue) {

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import LineFrame from './Charts/Timeline/LineFrame.js'
-// import BarFrame from '../Bar/BarFrame.js'
+import BarFrame from './Charts/Bar/BarFrame.js'
 import ScatterFrame from './Charts/Scatter/ScatterFrame.js'
 import {Row} from 'reactstrap';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
@@ -23,7 +23,8 @@ export default class TypeTabs extends Component {
             mul:[],
             color:"jet",
             normalizer:"None",
-            normalizerY:"None"};
+            normalizerY:"None",
+            changedMul:false};
         this.handleChange = this.handleChange.bind(this);
         this.keys = [];
         this.type = null;
@@ -43,12 +44,14 @@ export default class TypeTabs extends Component {
                 variable:this.variables[0],
                 variableY:this.variables[i],
                 mul:[this.variables[0]],
+                changedMul:!this.state.changedMul,
                 color:"jet",
                 normalizer:"None",
                 normalizerY:"None"});
         } else {
             var obj = {};
             obj[name] = newV;
+            if(name==="mul") obj["changedMul"] = !this.state.changedMul;
             this.setState(obj);
         }
     }
@@ -61,7 +64,7 @@ export default class TypeTabs extends Component {
 
     reload(){
         // $.ajax({
-        //     url: "http://54.219.61.146:5000/new/list",
+        //     url: "https://54.219.61.146:5000/new/list",
         //     context: document.body,
         //     crossDomain: true
         // }).done(this.set);
@@ -71,6 +74,7 @@ export default class TypeTabs extends Component {
 
 
     render(){
+        console.log(this.state.mul);
         if(this.topicIndex !== this.props.topicIndex){
             this.reload();
             return null;
@@ -83,8 +87,15 @@ export default class TypeTabs extends Component {
                     normalizer={this.state.normalizer} 
                     type={this.state.typeIndex}
                     colorType={this.data[this.state.typeIndex].Type}
-                    />,null,
-                // <BarFrame topicIndex={this.props.topicIndex}/>,
+                    />,
+                <BarFrame 
+                    topicIndex={this.props.topicIndex} 
+                    mul={this.state.mul} 
+                    normalizer={this.state.normalizer} 
+                    type={this.state.typeIndex}
+                    colorType={this.data[this.state.typeIndex].Type}
+                    changedMul={this.state.changedMul}
+                    />,
                 <ScatterFrame 
                     topicIndex={this.props.topicIndex} 
                     variable={this.state.variable} 
