@@ -87,6 +87,7 @@ export default class TypeTabs extends Component {
                     normalizer={this.state.normalizer} 
                     type={this.state.typeIndex}
                     colorType={this.data[this.state.typeIndex].Type}
+                    color={this.state.color}
                     />,
                 <BarFrame 
                     topicIndex={this.props.topicIndex} 
@@ -95,6 +96,7 @@ export default class TypeTabs extends Component {
                     type={this.state.typeIndex}
                     colorType={this.data[this.state.typeIndex].Type}
                     changedMul={this.state.changedMul}
+                    color={this.state.color}
                     />,
                 <ScatterFrame 
                     topicIndex={this.props.topicIndex} 
@@ -103,6 +105,7 @@ export default class TypeTabs extends Component {
                     normalizer={this.state.normalizer} 
                     normalizerY={this.state.normalizerY} 
                     type={this.state.typeIndex}
+                    color={this.state.color}
                     colorType={this.data[this.state.typeIndex].Type} />,
                 // <LineFrame topicIndex={this.props.topicIndex}/>,
                 null,null,null,null

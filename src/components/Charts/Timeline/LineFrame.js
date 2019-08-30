@@ -157,17 +157,6 @@ export default class LineFrame extends Component {
 
             // =========================== Reload Type =========================== //
             if(this.type !== type){
-                this.groups = {};
-                if(colorType === "Numerical"){
-                    var vItems = Object.keys(this.data);
-
-                    this.groups["None"] = {};
-                    for(i in vItems){
-                        this.groups["None"][vItems[i]] = {
-                            "color": linear_colors["cool"][Math.floor(i/vItems.length*1000)]
-                        };
-                    }
-                }
 
                 // ------------------ Selected Keys ------------------ //
                 this.options["selectedKeys"] = {};
@@ -180,8 +169,22 @@ export default class LineFrame extends Component {
                 category = this.options["category"];
             }
 
+            if(this.type != type || this.color!=this.props.color){
+                this.groups = {};
+                if(colorType === "Numerical"){
+                    var vItems = Object.keys(this.data);
+
+                    this.groups["None"] = {};
+                    for(i in vItems){
+                        this.groups["None"][vItems[i]] = {
+                            "color": linear_colors[this.props.color][Math.floor(i/vItems.length*1000)]
+                        };
+                    }
+                }
+            }
+
             // =========================== Reload Category =========================== //
-            if(this.category !== category || this.type!== type || this.selectedChanged){
+            if(this.category !== category || this.type!== type || this.selectedChanged || this.color!=this.props.color){
                 // --------------------- Legend --------------------- //
                 this.legend     = [];
                 this.colors     = {};
@@ -299,6 +302,7 @@ export default class LineFrame extends Component {
             this.normchanged        = false;
             this.varchanged         = false;
             this.type               = type;
+            this.color              = this.props.color;
             var title               = this.variable + " / "+ this.normalizer;
             if(this.normalizer==="None") title = this.variable
 
