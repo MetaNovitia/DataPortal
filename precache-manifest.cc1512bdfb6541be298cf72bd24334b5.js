@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "7ab98f9463bdc21ed8297ac099fc5f1e",
+    "revision": "924d24397f45938d374775cd0dab8998",
     "url": "/DataPortal/index.html"
   },
   {
-    "revision": "09a0d67a3095f9b188de",
+    "revision": "f41ffdebef4d55f7cac5",
     "url": "/DataPortal/static/css/2.0624914a.chunk.css"
   },
   {
-    "revision": "c44187b5b0048ecb4897",
+    "revision": "c973723ad22f1015c539",
     "url": "/DataPortal/static/css/main.bd69461e.chunk.css"
   },
   {
-    "revision": "09a0d67a3095f9b188de",
-    "url": "/DataPortal/static/js/2.171d5bc3.chunk.js"
+    "revision": "f41ffdebef4d55f7cac5",
+    "url": "/DataPortal/static/js/2.75b1ae4c.chunk.js"
   },
   {
-    "revision": "c44187b5b0048ecb4897",
-    "url": "/DataPortal/static/js/main.19cb4c86.chunk.js"
+    "revision": "c973723ad22f1015c539",
+    "url": "/DataPortal/static/js/main.32e03026.chunk.js"
   },
   {
     "revision": "f34464e666025bdf96ab",
