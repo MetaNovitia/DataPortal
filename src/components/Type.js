@@ -25,7 +25,12 @@ export default class Type extends Component {
         this.graphtabs      = [];
 
         for(var i in graphTypes){
-            this.graphtabs.push(<Tab key={graphTypes[i]} label={graphTypes[i]} icon={graphIcons[i]}/>);
+            this.graphtabs.push(
+                <Tab 
+                    key={graphTypes[i]} 
+                    label={graphTypes[i]} 
+                    icon={graphIcons[i]}/>
+            );
         }
         
     }
@@ -69,7 +74,7 @@ export default class Type extends Component {
                     </Tabs>
                 </AppBar>
                 
-                <Topic topicIndex={this.props.topicIndex} graphIndex={this.state.graphIndex}/>
+                <Topic topicIndex={this.props.topicIndex} graphIndex={this.state.graphIndex} storage={this.props.storage}/>
                 <br />
                 
                 <div style={{width:"100%",textAlign:"right"}}>

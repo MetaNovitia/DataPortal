@@ -15,7 +15,7 @@ export default class TopicTabs extends Component {
         this.handleChange = this.handleChange.bind(this);
         this.tabs = [];
         this.topic = null;
-        
+        this.storage = {};
     }
 
     set(projects){
@@ -27,23 +27,29 @@ export default class TopicTabs extends Component {
                 <Tab key={i.toString()+"topic"} label={projects[i]}/>
             );
         }
-        this.topic = <Type topicIndex={this.projects[0]}/>;
+        this.topic = <Type topicIndex={this.projects[0]} storage={this.storage}/>;
         this.setState({});
     }
 
     componentDidMount(){
-        /*
-        $.ajax({
-            url: "https://54.219.61.146:5000/new/list",
-            context: document.body,
-            crossDomain: true
-        }).done(this.set);*/
+        
+        // $.ajax({
+        //     url: "http://54.219.61.146:5000/new/list",
+        //     context: document.body
+        //     // crossDomain: false
+        // }).done(this.set);
+        // fetch("https://52.8.81.15:5000/new/list")
+        // .then(response => {
+        //     return response.json()
+        // }).then(json => {
+        //     this.set(json)
+        // })
         this.set(require("./data/new/list.json"));
     }
 
     handleChange(event, newValue) {
         if(this.state.topicIndex!==newValue){
-            this.topic = <Type topicIndex={this.projects[newValue]}/>;
+            this.topic = <Type topicIndex={this.projects[newValue]} storage={this.storage}/>;
             this.setState({topicIndex: newValue});
         }
     }

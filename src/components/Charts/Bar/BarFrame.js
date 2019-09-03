@@ -17,24 +17,24 @@ import Checkbox from '@material-ui/core/Checkbox';
 import linear_colors from '../../../data/Numerical.json';
 import $ from 'jquery';
 
-const maxInitalKeys   = 40;
+const maxInitalKeys   = 1;
 
 export default class BarFrame extends Component {
 
     constructor(props){
         super(props);
         this.options = {
-            category        : "None",
+            category        : "_items",
             stacked         : true,
             selectedKeys    : {},
             ranking         : "top",
-            numberOfItems   : 4
+            numberOfItems   : 10
         }
 
         this.data               = {};
         this.topicIndex         = -1;
         this.type               = "";
-        this.category           = "None";
+        this.category           = "_items";
         this.categoryItems      = [];
 
         this.legend             = [];
@@ -54,6 +54,12 @@ export default class BarFrame extends Component {
         this.normchanged        = false;
         this.varchanged         = false;
         this.changedMul         = undefined;
+        this.storage            = this.props.storage;
+
+        this.numChoices = [];
+        for(var i=5; i<=30; i+=5){
+            this.numChoices.push(<MenuItem key={i} value={i}>{i}</MenuItem>)
+        }
     }
 
 
@@ -118,31 +124,40 @@ export default class BarFrame extends Component {
             //     crossDomain: true
             // }).done(this.set);
             for(i in this.props.mul){
-                this.done1.push(false);
-                this.set(require(
-                    "../../../data/new/get/" + this.props.topicIndex+
-                    "/" + this.props.type +
-                    "/"+ this.props.mul[i] +
-                    ".json"),i);
+                if(!this.storage.hasOwnProperty(this.props.mul[i])){
+                    this.done1.push(false);
+                    console.log("One");
+                    var nData = require(
+                        "../../../data/new/get/" + this.props.topicIndex+
+                        "/" + this.props.type +
+                        "/"+ this.props.mul[i] +
+                        ".json")
+                    this.storage[this.props.mul[i]] = nData;
+                    this.set(nData,i);
+                }else this.set(this.storage[this.props.mul[i]],i);
             }
         }
         
         if(this.normalizer !== this.props.normalizer){
-            this.done2 = false;
-            if(this.props.normalizer!=="None"){
-                // $.ajax({
-                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-                //     context: document.body,
-                //     crossDomain: true
-                // }).done(this.set);
-                this.setNormalizer(require(
-                    "../../../data/new/get/" + this.props.topicIndex+
-                    "/" + this.props.type +
-                    "/"+ this.props.normalizer +
-                    ".json"));
-            }else{
-                this.setNormalizer("None");
-            }
+            if(!this.storage.hasOwnProperty(this.props.normalizer)){
+                this.done2 = false;
+                if(this.props.normalizer!=="None"){
+                    // $.ajax({
+                    //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                    //     context: document.body,
+                    //     crossDomain: true
+                    // }).done(this.set);
+                    var nData = require(
+                        "../../../data/new/get/" + this.props.topicIndex+
+                        "/" + this.props.type +
+                        "/"+ this.props.normalizer +
+                        ".json");
+                    this.storage[this.props.normalizer] = nData;
+                    this.setNormalizer(nData);
+                }else{
+                    this.setNormalizer("None");
+                }
+            }else this.setNormalizer(this.storage[this.props.normalizer]);
         }
 
         // check if all variables are read
@@ -153,7 +168,6 @@ export default class BarFrame extends Component {
                 break;
             }
         }
-        console.log(this.props.mul,this.done,this.changedMul,this.props.changedMul,this.done1);
 
         if(this.done && this.done2 && Object.keys(this.data).length!==0){
 
@@ -177,6 +191,21 @@ export default class BarFrame extends Component {
 
             // =========================== Reload Type =========================== //
             if(this.type !== type){
+
+                // ------------------ Selected Keys ------------------ //
+                this.options["selectedKeys"] = {};
+                ct = 0;
+                for(key in this.data[firstVar]){
+                    this.options["selectedKeys"][key] = 
+                        true;
+                        //((ct++ % maxInitalKeys === 0) && ct!==1);
+                }
+
+                this.options["category"] = "_items";
+                category = this.options["category"];
+            }
+
+            if(this.type !== type || this.color!=this.props.color){
                 this.groups = {};
                 if(colorType === "Numerical"){
                     var vItems = Object.keys(this.data[firstVar]);
@@ -184,24 +213,14 @@ export default class BarFrame extends Component {
                     this.groups["None"] = {};
                     for(i in vItems){
                         this.groups["None"][vItems[i]] = {
-                            "color": linear_colors["cool"][Math.floor(i/vItems.length*1000)]
+                            "color": linear_colors[this.props.color][Math.floor(i/vItems.length*1000)]
                         };
                     }
                 }
-
-                // ------------------ Selected Keys ------------------ //
-                this.options["selectedKeys"] = {};
-                ct = 0;
-                for(key in this.data[firstVar]){
-                    this.options["selectedKeys"][key] = ((ct++ % maxInitalKeys === 0) && ct!==1);
-                }
-
-                this.options["category"] = "None";
-                category = this.options["category"];
             }
 
             // =========================== Reload Category =========================== //
-            if(this.category !== category || this.type!== type || this.selectedChanged){
+            if(this.category !== category || this.type!== type || this.selectedChanged || this.color!=this.props.color){
                 // --------------------- Legend --------------------- //
                 this.legend     = [];
                 this.colors     = {};
@@ -318,8 +337,14 @@ export default class BarFrame extends Component {
             this.normchanged        = false;
             this.varchanged         = false;
             this.type               = type;
-            var title               = this.variable + " / "+ this.normalizer;
-            if(this.normalizer==="None") title = this.variable
+            var title               = "(";
+            for(i in this.props.mul){
+                console.log(i);
+                if(i!=="0" && i!==0) title += " + ";
+                title += this.props.mul[i];
+            }
+            title += ")";
+            if(this.normalizer!=="None") title += " / " + this.normalizer;
 
             return (
                     <div>
@@ -394,10 +419,7 @@ export default class BarFrame extends Component {
                                         name        = "numberOfItems"
                                         displayEmpty
                                     >
-                                        <MenuItem value={1}>1</MenuItem>
-                                        <MenuItem value={2}>2</MenuItem>
-                                        <MenuItem value={3}>3</MenuItem>
-                                        <MenuItem value={4}>4</MenuItem>
+                                        {this.numChoices}
                                     </Select>
                                 </div>
                                 <br />

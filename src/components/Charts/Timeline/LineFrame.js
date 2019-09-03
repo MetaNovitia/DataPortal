@@ -17,7 +17,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import linear_colors from '../../../data/Numerical.json';
 import $ from 'jquery';
 
-const maxInitalKeys   = 40;
+const maxInitalKeys   = 10;
 
 export default class LineFrame extends Component {
 
@@ -52,6 +52,7 @@ export default class LineFrame extends Component {
         this.done2              = false;
         this.normchanged        = false;
         this.varchanged         = false;
+        this.storage            = this.props.storage;
     }
 
 
@@ -78,6 +79,7 @@ export default class LineFrame extends Component {
 
     setNormalizer(data){
         this.normalizerdata = data;
+        
         this.done2 = true;
 
         this.normalizer     = this.props.normalizer;
@@ -99,37 +101,49 @@ export default class LineFrame extends Component {
 
     
     render(){
-        if(this.variable !== this.props.variable){
-            this.done1 = false;
-            // $.ajax({
-            //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-            //     context: document.body,
-            //     crossDomain: true
-            // }).done(this.set);
-            this.set(require(
-                "../../../data/new/get/" + this.props.topicIndex+
-                "/" + this.props.type +
-                "/"+ this.props.variable +
-                ".json"));
 
-        }
-        
-        if(this.normalizer !== this.props.normalizer){
-            this.done2 = false;
-            if(this.props.normalizer!=="None"){
+        if(this.variable !== this.props.variable){
+            if(!this.storage.hasOwnProperty(this.props.variable)){
+                this.done1 = false;
                 // $.ajax({
                 //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
                 //     context: document.body,
                 //     crossDomain: true
-                // }).done(this.set);
-                this.setNormalizer(require(
+                // }).done(data => {
+                //     this.storage[this.props.variable] = data;
+                //     this.set(data);
+                // });
+                var nData = require(
                     "../../../data/new/get/" + this.props.topicIndex+
                     "/" + this.props.type +
-                    "/"+ this.props.normalizer +
-                    ".json"));
-            }else{
-                this.setNormalizer("None");
-            }
+                    "/"+ this.props.variable +
+                    ".json");
+                this.storage[this.props.variable] = nData;
+                this.set(nData);
+            }else this.set(this.storage[this.props.variable]);
+
+        }
+        
+        if(this.normalizer !== this.props.normalizer){
+            if(!this.storage.hasOwnProperty(this.props.normalizer)){
+                this.done2 = false;
+                if(this.props.normalizer!=="None"){
+                    // $.ajax({
+                    //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                    //     context: document.body,
+                    //     crossDomain: true
+                    // }).done(this.set);
+                    var nData = require(
+                        "../../../data/new/get/" + this.props.topicIndex+
+                        "/" + this.props.type +
+                        "/"+ this.props.normalizer +
+                        ".json");
+                    this.storage[this.props.normalizer] = nData;
+                    this.setNormalizer(nData);
+                }else{
+                    this.setNormalizer("None");
+                }
+            }else this.setNormalizer(this.storage[this.props.normalizer]);
         }
 
         if(this.done1 && this.done2){
@@ -145,6 +159,7 @@ export default class LineFrame extends Component {
             var category        = this.options["category"];
             var type            = this.props.type;
             var colorType       = this.props.colorType;
+            var vItems          = Object.keys(this.data);
 
             /*
             // ------------------- Group Menu ------------------- //
@@ -162,7 +177,8 @@ export default class LineFrame extends Component {
                 this.options["selectedKeys"] = {};
                 ct = 0;
                 for(key in this.data){
-                    this.options["selectedKeys"][key] = ((ct++ % maxInitalKeys === 0) && ct!==1);
+                    this.options["selectedKeys"][key] = 
+                        ((ct++ % Math.floor(vItems.length/maxInitalKeys) === 0));
                 }
 
                 this.options["category"] = "None";
@@ -172,7 +188,6 @@ export default class LineFrame extends Component {
             if(this.type != type || this.color!=this.props.color){
                 this.groups = {};
                 if(colorType === "Numerical"){
-                    var vItems = Object.keys(this.data);
 
                     this.groups["None"] = {};
                     for(i in vItems){
@@ -268,7 +283,6 @@ export default class LineFrame extends Component {
                             var t_value         = t_entry[t_year];
                             var t_index         = years_index[t_year];
                             if(this.normalizer !== "None"){
-                                console.log(this.normalizerdata);
                                 var t_normalizer    = this.normalizerdata[key][t_year];
                                 if(t_normalizer!==undefined && t_normalizer!==0 && t_normalizer!==0.0){
                                     normalizedEntry["data"][t_index] = {

@@ -55,6 +55,7 @@ export default class ScatterFrame extends Component {
         this.done2Y             = false;
         this.normchanged        = false;
         this.varchanged         = false;
+        this.storage            = this.props.storage;
     }
 
 
@@ -96,6 +97,8 @@ export default class ScatterFrame extends Component {
         this.normalizer     = this.props.normalizer;
         this.normchanged    = true;
 
+        console.log(this.done2);
+
         this.setState({});
     }
 
@@ -124,74 +127,88 @@ export default class ScatterFrame extends Component {
     
     render(){
         if(this.variable !== this.props.variable){
-            this.done1 = false;
-            // $.ajax({
-            //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-            //     context: document.body,
-            //     crossDomain: true
-            // }).done(this.set);
-            this.set(require(
-                "../../../data/new/get/" + this.props.topicIndex+
-                "/" + this.props.type +
-                "/"+ this.props.variable +
-                ".json"));
-
+            if(!this.storage.hasOwnProperty(this.props.variable)){
+                this.done1 = false;
+                // $.ajax({
+                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     context: document.body,
+                //     crossDomain: true
+                // }).done(this.set);
+                var nData = require(
+                    "../../../data/new/get/" + this.props.topicIndex+
+                    "/" + this.props.type +
+                    "/"+ this.props.variable +
+                    ".json");
+                this.storage[this.props.variable] = nData;
+                this.set(nData);
+            }else this.set(this.storage[this.props.variable]);
         }
 
         if(this.variableY !== this.props.variableY){
-            this.done1Y = false;
-            // $.ajax({
-            //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-            //     context: document.body,
-            //     crossDomain: true
-            // }).done(this.set);
-            this.setY(require(
-                "../../../data/new/get/" + this.props.topicIndex+
-                "/" + this.props.type +
-                "/"+ this.props.variableY +
-                ".json"));
-
+            if(!this.storage.hasOwnProperty(this.props.variableY)){
+                this.done1Y = false;
+                // $.ajax({
+                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                //     context: document.body,
+                //     crossDomain: true
+                // }).done(this.set);
+                var nData = require(
+                    "../../../data/new/get/" + this.props.topicIndex+
+                    "/" + this.props.type +
+                    "/"+ this.props.variableY +
+                    ".json");
+                this.storage[this.props.variableY] = nData;
+                this.setY(nData);
+            }else this.setY(this.storage[this.props.variableY]);
         }
         
         if(this.normalizer !== this.props.normalizer){
-            this.done2 = false;
-            if(this.props.normalizer!=="None"){
-                // $.ajax({
-                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-                //     context: document.body,
-                //     crossDomain: true
-                // }).done(this.set);
-                this.setNormalizer(require(
-                    "../../../data/new/get/" + this.props.topicIndex+
-                    "/" + this.props.type +
-                    "/"+ this.props.normalizer +
-                    ".json"));
-            }else{
-                this.setNormalizer("None");
-            }
+            if(!this.storage.hasOwnProperty(this.props.normalizer)){
+                this.done2 = false;
+                if(this.props.normalizer!=="None"){
+                    // $.ajax({
+                    //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                    //     context: document.body,
+                    //     crossDomain: true
+                    // }).done(this.set);
+                    var nData = require(
+                        "../../../data/new/get/" + this.props.topicIndex+
+                        "/" + this.props.type +
+                        "/"+ this.props.normalizer +
+                        ".json");
+                    this.storage[this.props.normalizer] = nData;
+                    this.setNormalizer(nData);
+                }else{
+                    this.setNormalizer("None");
+                }
+            }else this.setNormalizer(this.storage[this.props.normalizer]);
         }
 
         if(this.normalizerY !== this.props.normalizerY){
-            this.done2Y = false;
-            if(this.props.normalizerY!=="None"){
-                // $.ajax({
-                //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
-                //     context: document.body,
-                //     crossDomain: true
-                // }).done(this.set);
-                this.setNormalizerY(require(
-                    "../../../data/new/get/" + this.props.topicIndex+
-                    "/" + this.props.type +
-                    "/"+ this.props.normalizerY +
-                    ".json"));
-            }else{
-                this.setNormalizerY("None");
-            }
+            if(!this.storage.hasOwnProperty(this.props.normalizerY)){
+                this.done2Y = false;
+                if(this.props.normalizerY!=="None"){
+                    // $.ajax({
+                    //     url: "https://54.219.61.146:5000/new/get/"+this.props.topicIndex,
+                    //     context: document.body,
+                    //     crossDomain: true
+                    // }).done(this.set);
+                    var nData = require(
+                        "../../../data/new/get/" + this.props.topicIndex+
+                        "/" + this.props.type +
+                        "/"+ this.props.normalizerY +
+                        ".json");
+                    this.storage[this.props.normalizerY] = nData;
+                    this.setNormalizerY(nData);
+                }else{
+                    this.setNormalizerY("None");
+                }
+            }else this.setNormalizerY(this.storage[this.props.normalizerY]);
         }
 
-        if(this.done1 && this.done2 && this.done1Y && this.done2Y){
+        console.log(this.done2)
 
-            console.log("re");
+        if(this.done1 && this.done2 && this.done1Y && this.done2Y){
 
             // ============================ General ========================== //
             var i = 0;      // array index
@@ -214,6 +231,21 @@ export default class ScatterFrame extends Component {
 
             // =========================== Reload Type =========================== //
             if(this.type !== type){
+
+                // ------------------ Selected Keys ------------------ //
+                this.options["selectedKeys"] = {};
+                ct = 0;
+                for(key in this.data){
+                    this.options["selectedKeys"][key] = 
+                        true;
+                        // ((ct++ % maxInitalKeys === 0) && ct!==1);
+                }
+
+                this.options["category"] = "None";
+                category = this.options["category"];
+            }
+
+            if(this.type != type || this.color!=this.props.color){
                 this.groups = {};
                 if(colorType === "Numerical"){
                     var vItems = Object.keys(this.data);
@@ -221,24 +253,14 @@ export default class ScatterFrame extends Component {
                     this.groups["None"] = {};
                     for(i in vItems){
                         this.groups["None"][vItems[i]] = {
-                            "color": linear_colors["cool"][Math.floor(i/vItems.length*1000)]
+                            "color": linear_colors[this.props.color][Math.floor(i/vItems.length*1000)]
                         };
                     }
                 }
-
-                // ------------------ Selected Keys ------------------ //
-                this.options["selectedKeys"] = {};
-                ct = 0;
-                for(key in this.data){
-                    this.options["selectedKeys"][key] = ((ct++ % maxInitalKeys === 0) && ct!==1);
-                }
-
-                this.options["category"] = "None";
-                category = this.options["category"];
             }
 
             // =========================== Reload Category =========================== //
-            if(this.category !== category || this.type!== type || this.selectedChanged){
+            if(this.category !== category || this.type!== type || this.selectedChanged || this.color!=this.props.color){
                 // --------------------- Legend --------------------- //
                 this.legend     = [];
                 this.colors     = {};

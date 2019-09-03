@@ -32,6 +32,16 @@ export default class TypeTabs extends Component {
         this.variablesMenu = [];
     }
 
+    get(newstate){
+        // $.ajax({
+        //     url: "https://54.219.61.146:5000/new/list",
+        //     context: document.body,
+        //     crossDomain: true
+        // }).done(this.set);
+        this.topicIndex = this.props.topicIndex;
+        this.set(require("../data/new/get/"+this.props.topicIndex+"/metadata.json").list);
+    }
+
     handleChange(event) {
         var newV = event.target.value;
         var name = event.target.name;
@@ -56,6 +66,7 @@ export default class TypeTabs extends Component {
         }
     }
 
+
     set(types){
         this.data = types;
         this.keys  = Object.keys(types);
@@ -74,7 +85,6 @@ export default class TypeTabs extends Component {
 
 
     render(){
-        console.log(this.state.mul);
         if(this.topicIndex !== this.props.topicIndex){
             this.reload();
             return null;
@@ -88,6 +98,7 @@ export default class TypeTabs extends Component {
                     type={this.state.typeIndex}
                     colorType={this.data[this.state.typeIndex].Type}
                     color={this.state.color}
+                    storage={this.props.storage}
                     />,
                 <BarFrame 
                     topicIndex={this.props.topicIndex} 
@@ -97,6 +108,7 @@ export default class TypeTabs extends Component {
                     colorType={this.data[this.state.typeIndex].Type}
                     changedMul={this.state.changedMul}
                     color={this.state.color}
+                    storage={this.props.storage}
                     />,
                 <ScatterFrame 
                     topicIndex={this.props.topicIndex} 
@@ -106,6 +118,7 @@ export default class TypeTabs extends Component {
                     normalizerY={this.state.normalizerY} 
                     type={this.state.typeIndex}
                     color={this.state.color}
+                    storage={this.props.storage}
                     colorType={this.data[this.state.typeIndex].Type} />,
                 // <LineFrame topicIndex={this.props.topicIndex}/>,
                 null,null,null,null

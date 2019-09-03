@@ -100,7 +100,9 @@ const Sample = (props) => {
     }else{
         barData = dataGenerator[current[0]][1].sort((a, b) => b._total-a._total);
     }
-    barData = barData.slice(dataGenerator[current[0]][1].length-props.numberOfItems);
+    var num = dataGenerator[current[0]][1].length-props.numberOfItems;
+    if(num<0) num = 0;
+    barData = barData.slice(num);
 
     return (
         <>
@@ -127,7 +129,7 @@ const Sample = (props) => {
                         tickRotation: 0,
                         legend: props.title,
                         legendPosition: 'middle',
-                        legendOffset: 32
+                        legendOffset: 40
                     }}
                     enableGridX={false}
                     enableGridY={false}
