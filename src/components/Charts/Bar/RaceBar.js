@@ -126,7 +126,7 @@ const Sample = (props) => {
                     axisBottom={{
                         tickSize: 5,
                         tickPadding: 5,
-                        tickRotation: 0,
+                        tickRotation: -20,
                         legend: props.title,
                         legendPosition: 'middle',
                         legendOffset: 40
