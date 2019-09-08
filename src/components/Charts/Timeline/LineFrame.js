@@ -207,18 +207,13 @@ export default class LineFrame extends Component {
 
                 for(key in colorcode){
                     var color = colorcode[key]["color"];
-                    var ColorCheckbox = withStyles({
-                            root: {
-                                color: color
-                            }
-                        })(props => <Checkbox color="default" {...props} />);
 
                     // No Grouping
                     if(colorcode[key]["members"]===undefined){
                         this.colors[key] = color;
                         this.legend.push(
                             <Row key={key} style={{margin:"0", alignItems:"center"}}>
-                                <ColorCheckbox
+                                <Checkbox
                                     name={key}
                                     checked={this.options.selectedKeys[key]}
                                     onChange={this.checkBox}
@@ -236,7 +231,7 @@ export default class LineFrame extends Component {
                             this.colors[colorcode[key]["members"][member]] = color;
                             checkboxes.push(
                                 <Row key={colorcode[key]["members"][member]} style={{margin:"0", alignItems:"center"}}>
-                                    <ColorCheckbox
+                                    <Checkbox
                                         name={colorcode[key]["members"][member]}
                                         checked={this.options.selectedKeys[colorcode[key]["members"][member]]}
                                         onChange={this.checkBox}
