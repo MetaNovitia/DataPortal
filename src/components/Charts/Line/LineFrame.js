@@ -1,5 +1,3 @@
-// missing data will not be shown
-
 import React, { Component } from 'react';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -7,7 +5,7 @@ import { Grid, TextField, MenuItem, FormControl, FormGroup, FormControlLabel, Ch
 
 import Switch from "react-switch";
 
-import BarGraph from './BarGraph.js'
+import LineGraph from './LineGraph.js'
 
 import colormaps from '../../../color'
 
@@ -43,22 +41,20 @@ function getRandomSubarray(arr, n) {
     return shuffled.slice(0, n);
 }
 
-class BarFrame extends Component {
+class LineFrame extends Component {
 
     constructor(props) {
         super(props);
 
-        const { projectName, topicName, storage } = props;
+        const { projectName, topicName, variableX, storage } = props;
 
         this.state = {
             previousProjectName: undefined,
             normalizerData: undefined,
 
             curve: "cardinal",
-            stacked: true,
-            selectedKeys: getRandomSubarray(Object.keys(storage), 6),
-            ranking         : "top",
-            numberOfItems   : 10
+            stacked: false,
+            selectedKeys: getRandomSubarray(Object.keys(storage), 6)
         }
 
         this.changeInput = this.changeInput.bind(this);
@@ -100,10 +96,10 @@ class BarFrame extends Component {
     }
 
     render() {
-        const { classes, color, variableName, normalizerX, storage, projectName } = this.props;
+        const { classes, color, variableName, variableX, normalizerX, storage, projectName } = this.props;
         const colors = colormaps[color][10];
 
-        const { stacked, curve, selectedKeys,numberOfItems, ranking } = this.state;
+        const { stacked, curve, selectedKeys } = this.state;
 
         var title = projectName;
         if (normalizerX !== "None") {
@@ -111,74 +107,97 @@ class BarFrame extends Component {
         }
 
         // ------------------------------------- block -------------------------------
-        let filteredEntries = {};
+        let filteredEntries = [];
         let filteredData = [];
-        var year, item;
+        var year;
         if(selectedKeys.length>0){
 
+            var min_year = undefined;
+            var max_year = undefined;
+            
             selectedKeys.sort().forEach(dataKey => {
-                for(var varKey in storage[dataKey]){
-                    for(year in storage[dataKey][varKey]){
 
-                        if(filteredEntries[year]===undefined){
-                            filteredEntries[year]={};
-                        }
+                var normalizedEntry = {"id":dataKey};
 
-                        if(filteredEntries[year][varKey]===undefined) 
-                            filteredEntries[year][varKey]={_total:0};
-                        
-                        const variableEntryValue = storage[dataKey][varKey][year];
-                        if (normalizerX === "None") {
-                            filteredEntries[year][varKey][dataKey] = Number(variableEntryValue);
-                            filteredEntries[year][varKey]._total += Number(variableEntryValue);
-                        }
-                        // else {
-                        //     const normalizer = normalizerData[dataKey]
-                        //     // pair = [t_year, t_value]
-                        //     normalizedEntry = Object.entries(variableEntry).map(pair => {
-                        //         if (parseFloat(normalizer[pair[0]]) === 0) {
-                        //             return {
-                        //                 "x": pair[0],
-                        //                 "y": null
-                        //             }
-                        //         } else {
-                        //             return {
-                        //                 "x": pair[0],
-                        //                 "y": pair[1] / normalizer[pair[0]]
-                        //             }
-                        //         }
-                        //     })
-                        // }
+                variableX.forEach(varKey => {
+                    // initialize
+                    if(normalizedEntry.data===undefined){
+                        normalizedEntry.data = {};
+                        for(year in storage[dataKey][varKey]) normalizedEntry.data[year] = 0;
+                    }
+
+                    // loop, will be undefined if not all variables have the value in that year
+                    if(varKey==="3" && dataKey==="Livestock Head Total") console.log(storage[dataKey][varKey])
+                    for(year in normalizedEntry.data){
+                        if( storage[dataKey][varKey]        !== undefined &&    // missing item
+                            storage[dataKey][varKey][year]  !== undefined &&    // missing year of item
+                            normalizedEntry.data[year]      !== undefined)      // missing year of other items
+                        {
+                            
+                            if(varKey==="3" && dataKey==="Livestock Head Total") console.log("HERE")
+                            var variableEntryValue = Number(storage[dataKey][varKey][year]);
+                            // if (normalizerX !== "None") normalizedEntry.data[year] += Number(variableEntryValue);
+                            //     const normalizer = normalizerData[dataKey]
+                            //     // pair = [t_year, t_value]
+                            //     normalizedEntry = Object.entries(variableEntry).map(pair => {
+                            //         if (parseFloat(normalizer[pair[0]]) === 0) {
+                            //             return {
+                            //                 "x": pair[0],
+                            //                 "y": null
+                            //             }
+                            //         } else {
+                            //             return {
+                            //                 "x": pair[0],
+                            //                 "y": pair[1] / normalizer[pair[0]]
+                            //             }
+                            //         }
+                            //     })
+                            // }
+
+                            normalizedEntry.data[year] += variableEntryValue;
+
+                        }else normalizedEntry.data[year] = undefined;
                     };
-                }
+                })
+
+                const years = Object.keys(normalizedEntry.data);
+                const this_min_year = Math.min(...years);
+                const this_max_year = Math.max(...years);
+
+                if(min_year===undefined || this_min_year < min_year) min_year = this_min_year;
+                if(max_year===undefined || this_max_year > max_year) max_year = this_max_year;
+
+                filteredEntries.push(normalizedEntry);
             })
 
-            Object.keys(filteredEntries).sort().forEach(year => {
-
-                const entry = filteredEntries[year];
+            filteredData = filteredEntries.map(entry => {
                 var normalizedData = [];
-                for(item in entry){
-                    if(Object.keys(entry[item]).length-1===selectedKeys.length)
-                        normalizedData.push({"id": item,...entry[item]});
+                for(year=min_year; year<=max_year; year++){
+                    if(entry.data[year]===undefined) entry.data[year]=null;
+                    normalizedData.push({
+                        "x": year.toString(),
+                        "y": entry.data[year]
+                    })
                 }
 
-                filteredData.push([year,normalizedData])
+                return {
+                    "data": normalizedData,
+                    "id": entry.id
+                }
             });
         }
-
         // ------------------------------------- block -------------------------------
 
         return (
             <Grid container direction="row" justify="center" alignItems="flex-start">
                 <Grid item xs={12} sm={12} md={9} lg={9}>
-                    <BarGraph
-                        data            = {filteredData} 
-                        groupMode       = {stacked}
-                        title           = {title}
-                        pkeys           = {selectedKeys}
-                        numberOfItems   = {numberOfItems}
-                        ranking         = {ranking}
-                        colors          = {colors}
+                    <LineGraph
+                        data={filteredData}
+                        stacked={stacked}
+                        area={stacked}
+                        curve={curve}
+                        title={title}
+                        colors={colors}
                     />
                 </Grid>
                 <Grid item container xs={12} sm={12} md={3} lg={3} className={classes.optionsContainerRoot}  style={{ maxHeight: "580px" }}>
@@ -189,31 +208,18 @@ class BarFrame extends Component {
                             value={stacked} />
                         <div style={{ marginLeft: "4%", fontFamily: "Verdana" }}>Stacked</div>
                     </Grid>
-                    <Grid item xs={8} className={classes.optionsContainer}>
+                    <Grid item xs={12} className={classes.optionsContainer}>
                         <TextField select
                             className={classes.select}
 
-                            label="Ranking"
+                            label="Curve Type"
                             onChange={this.changeInput}
-                            value={ranking}
-                            name="ranking"
+                            value={curve}
+                            name="curve"
                             InputLabelProps={{ shrink: true }}
                         >
-                            <MenuItem value={'top'}>Top</MenuItem>
-                            <MenuItem value={'bottom'}  >Bottom</MenuItem>
-                        </TextField>
-                    </Grid>
-                    <Grid item xs={4} className={classes.optionsContainer}>
-                        <TextField select
-                            className={classes.select}
-
-                            label=" "
-                            onChange={this.changeInput}
-                            value={numberOfItems}
-                            name="numberOfItems"
-                            InputLabelProps={{ shrink: true }}
-                        >
-                            {[5,10,15,20,25,30].map(key=> <MenuItem key={key} value={key}>{key}</MenuItem>)}
+                            <MenuItem value={'cardinal'}>Curved</MenuItem>
+                            <MenuItem value={'linear'}  >Linear</MenuItem>
                         </TextField>
                     </Grid>
                     <Grid item xs={12} className={classes.optionsContainer}>
@@ -235,4 +241,4 @@ class BarFrame extends Component {
     }
 }
 
-export default withStyles(styles)(BarFrame)
+export default withStyles(styles)(LineFrame)

@@ -1,86 +1,139 @@
-import React, {Component} from 'react';
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Type from './components/Type.js'
-import $ from 'jquery';
+import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core';
+import { AppBar, Tabs, Tab } from '@material-ui/core';
 
-export default class TopicTabs extends Component {
+import ChartsContainer from './components/ChartsContainer'
 
-    constructor(props){
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        width: '100%',
+        backgroundColor: "white",
+    },
+    appbar: {
+        background: "#DDDDDD",
+    },
+    tabIndicator: {
+        backgroundColor: 'black'
+    },
+    topicContainter: {
+        border: "5px solid transparent"
+    }
+});
+
+class TopicTabs extends Component {
+
+    constructor(props) {
         super(props);
-        this.data = "";
-        this.set = this.set.bind(this);
-        this.state = {topicIndex: 0};
-        this.handleChange = this.handleChange.bind(this);
-        this.tabs = [];
-        this.topic = null;
+
+        // initial states
+        this.state = {
+            projectData: undefined,
+            projects: undefined,    // this stores all the avaible project names
+            projectIndex: -1,         // index of the project that is currently selected.
+        }
+
         this.storage = {};
+
+        // bind functions
+        this.setProject = this.setProject.bind(this);
+        this.setInit = this.setInit.bind(this);
+        this.setData = this.setData.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
     }
 
-    set(projects){
-        this.projects = [];
-        this.tabs = [];
-        for(var i in projects){
-            this.projects.push(projects[i]);
-            this.tabs.push(
-                <Tab key={i.toString()+"topic"} label={projects[i]}/>
-            );
+    setInit(fetched_projects, fetched_data) {
+        const projectName = Object.keys(fetched_projects)[0];
+        this.storage[projectName] = fetched_data;
+        this.setState({
+            projectIndex: 0,
+            projectData: fetched_projects,
+            projects: Object.keys(fetched_projects)
+        });
+    }
+
+    setProject(fetched_projects) {
+        const projectName = Object.keys(fetched_projects)[0];
+        const fetched_data = require("./data/new/get/" + projectName + ".json");
+        this.setInit(fetched_projects, fetched_data);
+    }
+
+    setData(fetched_data, newValue) {
+        const projectName = this.state.projects[newValue];
+        this.storage[projectName] = fetched_data;
+        this.setState({ projectIndex: newValue });
+    }
+
+    componentDidMount() {
+        /*
+        $.ajax({
+            url: "https://54.219.61.146:5000/new/list",
+            context: document.body,
+            crossDomain: true
+        }).done(this.set);*/
+        // this.set(require("./data/new/list.json"));
+
+        const fetched_projects = require("./data/new/list.json");
+        this.setProject(fetched_projects);
+    }
+
+    handleTabChange(_, newValue) {
+        if (this.state.topicIndex !== newValue) {
+            if(!this.storage.hasOwnProperty(newValue)){
+                const projectName = this.state.projects[newValue];
+                const fetched_data = require("./data/new/get/" + projectName + ".json");
+                this.setData(fetched_data, newValue);
+            }else{
+                this.setState({ projectIndex: newValue });
+            }
         }
-        this.topic = <Type topicIndex={this.projects[0]} storage={this.storage}/>;
-        this.setState({});
     }
 
-    componentDidMount(){
-        
-        // $.ajax({
-        //     url: "http://54.219.61.146:5000/new/list",
-        //     context: document.body
-        //     // crossDomain: false
-        // }).done(this.set);
-        // fetch("https://52.8.81.15:5000/new/list")
-        // .then(response => {
-        //     return response.json()
-        // }).then(json => {
-        //     this.set(json)
-        // })
-        this.set(require("./data/new/list.json"));
-    }
+    render() {
 
-    handleChange(event, newValue) {
-        if(this.state.topicIndex!==newValue){
-            this.topic = <Type topicIndex={this.projects[newValue]} storage={this.storage}/>;
-            this.setState({topicIndex: newValue});
+        const { projectData, projects, projectIndex } = this.state;
+        const { classes } = this.props; // style classes
+
+        if (projects === undefined) {
+            return null;
         }
-    }
 
-    render(){
+        const projectName = projects[projectIndex];
+
         return (
-            <div style={{
-                flexGrow: 1,
-                width: '100%',
-                backgroundColor: "white",
-            }}>
-                <AppBar 
-                    position="static" 
+            <div className={classes.root}>
+                <AppBar
+                    position="static"
                     color="default">
                     <Tabs
-                    TabIndicatorProps={{style: {backgroundColor: 'black'}}}
-                    value={this.state.topicIndex}
-                    onChange={this.handleChange}
-                    variant="scrollable"
-                    scrollButtons="on"
-                    indicatorColor="primary"
-                    textColor="inherit"
-                    style={{background:"#DDDDDD"}}
+                        className={classes.appbar}
+                        value={projectIndex}
+                        onChange={this.handleTabChange}
+
+                        // TabIndicatorProps={classes.tabIndicator}
+                        TabIndicatorProps={{className: classes.tabIndicator}}
+                        indicatorColor="primary"
+
+                        variant="scrollable"
+                        scrollButtons="on"
+                        textColor="inherit"
                     >
-                    {this.tabs}
+                        {projects.map((projectName, i) =>
+                            <Tab key={i} label={projectName} />
+                        )}
                     </Tabs>
                 </AppBar>
-                <div style={{border:"5px solid transparent"}}>
-                    {this.topic}
+
+                <div className={classes.topicContainter}>
+                    <ChartsContainer 
+                        projectName={projectName}
+                        projectData={projectData[projectName]}
+                        storage={this.storage[projectName]}
+                    />
                 </div>
             </div>
         );
     }
 }
+
+export default withStyles(styles)(TopicTabs)
