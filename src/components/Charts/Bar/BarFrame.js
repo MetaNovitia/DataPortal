@@ -114,6 +114,7 @@ class BarFrame extends Component {
         let filteredEntries = {};
         let filteredData = [];
         var year, item;
+
         if(selectedKeys.length>0){
 
             selectedKeys.sort().forEach(dataKey => {
@@ -127,10 +128,10 @@ class BarFrame extends Component {
                         if(filteredEntries[year][varKey]===undefined) 
                             filteredEntries[year][varKey]={_total:0};
                         
-                        const variableEntryValue = storage[dataKey][varKey][year];
+                        const variableEntryValue = Number(storage[dataKey][varKey][year]);
                         if (normalizerX === "None") {
-                            filteredEntries[year][varKey][dataKey] = Number(variableEntryValue);
-                            filteredEntries[year][varKey]._total += Number(variableEntryValue);
+                            filteredEntries[year][varKey][dataKey] = variableEntryValue;
+                            filteredEntries[year][varKey]._total += variableEntryValue;
                         }
                         // else {
                         //     const normalizer = normalizerData[dataKey]
@@ -156,13 +157,23 @@ class BarFrame extends Component {
             Object.keys(filteredEntries).sort().forEach(year => {
 
                 const entry = filteredEntries[year];
+                var max_stacked = undefined;
+                var max_value = undefined;
                 var normalizedData = [];
                 for(item in entry){
-                    if(Object.keys(entry[item]).length-1===selectedKeys.length)
+                    if(Object.keys(entry[item]).length-1===selectedKeys.length){
                         normalizedData.push({"id": item,...entry[item]});
+                        if(max_stacked===undefined || max_stacked<entry[item]._total) 
+                            max_stacked = entry[item]._total;
+
+                        for(var value in entry[item]){
+                            const curr_v = entry[item][value];
+                            if(max_value===undefined || curr_v > max_value) max_value = curr_v;
+                        }
+                    }
                 }
 
-                filteredData.push([year,normalizedData])
+                filteredData.push([year,normalizedData,max_stacked, max_value])
             });
         }
 

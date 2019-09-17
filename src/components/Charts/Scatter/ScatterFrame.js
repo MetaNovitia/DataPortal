@@ -132,7 +132,11 @@ class ScatterFrame extends Component {
         // ------------------------------------- block -------------------------------
         let filteredEntries = {};
         let filteredData = [];
+
         var year, item;
+        var max_x = {};
+        var max_y = {};
+
         if(selectedKeys.length>0){
             selectedKeys.sort().forEach((key,i)=>{
                 groups[key].forEach(item=>{
@@ -145,16 +149,21 @@ class ScatterFrame extends Component {
                         if(filteredEntries[year][item]===undefined) 
                             filteredEntries[year][item]=[];
                         
-                        const variableEntryX = storage[variableX][item][year];
+                        const variableEntryX = Number(storage[variableX][item][year]);
                         if(storage[variableY][item]!==undefined){
-                            const variableEntryY = storage[variableY][item][year];
+                            const variableEntryY = Number(storage[variableY][item][year]);
                             if (normalizerX === "None") {
                                 filteredEntries[year][item].push({
-                                    "x":Number(variableEntryX),
-                                    "y":Number(variableEntryY),
+                                    "x":variableEntryX,
+                                    "y":variableEntryY,
                                     "color":colors[i],
                                     "this_id":key
                                 });
+
+                                if(max_x[year]===undefined || max_x[year]<variableEntryX) 
+                                    max_x[year] = variableEntryX;
+                                if(max_y[year]===undefined || max_y[year]<variableEntryY) 
+                                    max_y[year] = variableEntryY;
                             }
                         }
                         
@@ -199,6 +208,8 @@ class ScatterFrame extends Component {
                         titleY={variableY}
                         dataGenerator={filteredData}
                         colors={colors}
+                        max_y = {max_y}
+                        max_x = {max_x}
                     />
                 </Grid>
                 { show &&

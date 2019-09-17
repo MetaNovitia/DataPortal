@@ -7,21 +7,40 @@ export default class LineGraph extends Component {
     render() {
 
         // set if area shown
-        var min = 'auto';
-        if (this.props.area) { min = 0; }
-        var div = this.props.data.length===0?
+        const div = this.props.data.length===0?
                     1:
                     Math.max(Math.floor(this.props.data[0].data.length/10),1);
+
+        const min = this.props.stacked ? 0 : (this.props.min_value * 0.9);
+        const max = this.props.stacked ? this.props.max_stacked * 1.1 : this.props.max_value * 1.1;
+
+        var yDiv = 1;
+        var mul = 0;
+        while(Math.abs(max / yDiv) >= 1000){
+            yDiv *= 1000;
+            mul += 3;
+        }
+        while(Math.abs(max / yDiv) < 1){
+            yDiv /= 1000;
+            mul -= 3;
+        }
+
+        const title =   mul===0 ? this.props.title :
+                        this.props.title + " x 10^" + mul.toString();
 
         return (
             <>
                 <div >
                     <div id="dp-graphdiv" style={{ height: "600px", width: "100%" }}>
                         <ResponsiveLine
+                            style={{fontFamily:"Verdana"}}
                             data={this.props.data}
-                            margin={{ top: 50, right: 25, bottom: 50, left: 80 }}
+                            margin={{ top: 50, right: 25, bottom: 50, left: 70 }}
                             xScale={{ type: 'point', min: 'auto', max: 'auto' }}
-                            yScale={{ type: 'linear', stacked: this.props.stacked, min: min, max: 'auto' }}
+                            yScale={{ type: 'linear', 
+                                        stacked: this.props.stacked, 
+                                        min: min, 
+                                        max: max}}
 
                             axisBottom={{
                                 orient: 'bottom',
@@ -38,10 +57,10 @@ export default class LineGraph extends Component {
                                 tickSize: 4,
                                 tickPadding: 2,
                                 tickRotation: 0,
-                                legend: this.props.title,
-                                legendOffset: -70,
+                                legend: title,
+                                legendOffset: -50,
                                 legendPosition: 'middle',
-                                format: (value,props) => { console.log(value); return value; },
+                                format: (value,props) => { return Math.round(value/yDiv*10)/10; },
                             }}
 
                             labelFormat=".0s"

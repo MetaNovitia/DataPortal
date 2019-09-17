@@ -109,7 +109,13 @@ class LineFrame extends Component {
         // ------------------------------------- block -------------------------------
         let filteredEntries = [];
         let filteredData = [];
+
         var year;
+        var min_value = undefined;
+        var max_value = undefined;
+        var stacked_values = [];
+        var max_stacked = undefined;
+
         if(selectedKeys.length>0){
 
             var min_year = undefined;
@@ -170,10 +176,23 @@ class LineFrame extends Component {
                 filteredEntries.push(normalizedEntry);
             })
 
+            for(year=min_year; year<=max_year; year++) stacked_values.push(0);
+
             filteredData = filteredEntries.map(entry => {
                 var normalizedData = [];
                 for(year=min_year; year<=max_year; year++){
-                    if(entry.data[year]===undefined) entry.data[year]=null;
+                    if(entry.data[year]===undefined){
+                        entry.data[year]=null;
+                        stacked_values[year-min_year] = null;
+                    }
+                    else{
+                        var val = entry.data[year];
+                        if(min_value===undefined || val < min_value) min_value = val;
+                        if(max_value===undefined || val > max_value) max_value = val;
+                        if(stacked_values[year-min_year]!==null) 
+                            stacked_values[year-min_year] += val;
+                    }
+
                     normalizedData.push({
                         "x": year.toString(),
                         "y": entry.data[year]
@@ -186,6 +205,11 @@ class LineFrame extends Component {
                 }
             });
         }
+
+        stacked_values.forEach(item => {
+            if(item !== null && (max_stacked===undefined || max_stacked < item)) max_stacked = item;
+        })
+
         // ------------------------------------- block -------------------------------
 
         return (
@@ -198,6 +222,9 @@ class LineFrame extends Component {
                         curve={curve}
                         title={title}
                         colors={colors}
+                        min_value={min_value}
+                        max_value={max_value}
+                        max_stacked={max_stacked}
                     />
                 </Grid>
                 <Grid item container xs={12} sm={12} md={3} lg={3} className={classes.optionsContainerRoot}  style={{ maxHeight: "580px" }}>

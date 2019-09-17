@@ -152,6 +152,17 @@ const BarGraph = (props) => {
     }
     barData = barData.slice(dataGenerator[current[0]][1].length-props.numberOfItems);
 
+
+    const max = props.stacked ? dataGenerator[current[0]][2] : dataGenerator[current[0]][3];
+
+    var yDiv = 1;
+    var mul = 0;
+    while(Math.abs(max / yDiv) >= 1000){ yDiv *= 1000; mul+=3}
+    while(Math.abs(max / yDiv) < 1){ yDiv /= 1000; mul-=3;}
+
+    const title =   yDiv===1 ? props.title : 
+                    props.title + " x 10^" + mul.toString();
+
     
     return (
         <>
@@ -176,9 +187,10 @@ const BarGraph = (props) => {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: props.title,
+                        legend: title,
                         legendPosition: 'middle',
-                        legendOffset: 32
+                        legendOffset: 32,
+                        format: (value) => {return Math.round(value/yDiv*10)/10;}
                     }}
                     enableGridX={false}
                     enableGridY={false}

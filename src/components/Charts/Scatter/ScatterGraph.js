@@ -60,6 +60,36 @@ const ScatterGraph = (props) => {
         current[0] = props.dataGenerator.length-1;
     }
 
+    const max_x = props.max_x[dataGenerator[current[0]][0]];
+    const max_y = props.max_y[dataGenerator[current[0]][0]];
+
+    console.log(props.max_x,props.max_y);
+
+    var xDiv = 1;
+    var xmul = 0;
+    while(Math.abs(max_x / xDiv) >= 1000){
+        xDiv *= 1000;
+        xmul += 3;
+    }
+    while(Math.abs(max_x / xDiv) < 1){
+        xDiv /= 1000;
+        xmul -= 3;
+    }
+
+    var yDiv = 1;
+    var ymul = 0;
+    while(Math.abs(max_y / yDiv) >= 1000){
+        yDiv *= 1000;
+        ymul += 3;
+    }
+    while(Math.abs(max_y / yDiv) < 1){
+        yDiv /= 1000;
+        ymul -= 3;
+    }
+
+    const title_x =     xmul===0 ? props.titleX : props.titleX + " x 10^" + xmul.toString();
+    const title_y =     ymul===0 ? props.titleY : props.titleY + " x 10^" + ymul.toString();
+
     return (
         <>
         
@@ -83,9 +113,10 @@ const ScatterGraph = (props) => {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: props.titleX,
+                        legend: title_x,
                         legendPosition: 'middle',
-                        legendOffset: 60
+                        legendOffset: 60,
+                        format: (value) => {return Math.round(value/xDiv*10)/10;}
                     }}
                     renderNode={CustomNode}
                     axisLeft={{
@@ -93,9 +124,10 @@ const ScatterGraph = (props) => {
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
-                        legend: props.titleY,
+                        legend: title_y,
                         legendPosition: 'middle',
-                        legendOffset: -60
+                        legendOffset: -60,
+                        format: (value) => {return Math.round(value/yDiv*10)/10;}
                     }}
                     tooltip={({ node }) => {
                         return(
