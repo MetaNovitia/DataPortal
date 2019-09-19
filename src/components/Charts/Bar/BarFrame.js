@@ -100,7 +100,7 @@ class BarFrame extends Component {
     }
 
     render() {
-        const { classes, color, variableName, normalizerX, storage, projectName } = this.props;
+        const { classes, color, variableName, normalizerX, storage, projectName, normalizerData } = this.props;
         const colors = colormaps[color][10];
 
         const { stacked, curve, selectedKeys,numberOfItems, ranking } = this.state;
@@ -128,28 +128,21 @@ class BarFrame extends Component {
                         if(filteredEntries[year][varKey]===undefined) 
                             filteredEntries[year][varKey]={_total:0};
                         
-                        const variableEntryValue = Number(storage[dataKey][varKey][year]);
+                        var variableEntryValue = Number(storage[dataKey][varKey][year]);
                         if (normalizerX === "None") {
                             filteredEntries[year][varKey][dataKey] = variableEntryValue;
                             filteredEntries[year][varKey]._total += variableEntryValue;
                         }
-                        // else {
-                        //     const normalizer = normalizerData[dataKey]
-                        //     // pair = [t_year, t_value]
-                        //     normalizedEntry = Object.entries(variableEntry).map(pair => {
-                        //         if (parseFloat(normalizer[pair[0]]) === 0) {
-                        //             return {
-                        //                 "x": pair[0],
-                        //                 "y": null
-                        //             }
-                        //         } else {
-                        //             return {
-                        //                 "x": pair[0],
-                        //                 "y": pair[1] / normalizer[pair[0]]
-                        //             }
-                        //         }
-                        //     })
-                        // }
+                        else {
+                            if( normalizerData[normalizerX].hasOwnProperty(varKey) &&
+                                normalizerData[normalizerX][varKey].hasOwnProperty(year) &&
+                                parseFloat(normalizerData[normalizerX][varKey][year]) !== 0){
+                                const normalizer = normalizerData[normalizerX][varKey][year];
+                                variableEntryValue /= normalizer;
+                                filteredEntries[year][varKey][dataKey] = variableEntryValue;
+                                filteredEntries[year][varKey]._total += variableEntryValue;
+                            }
+                        }
                     };
                 }
             })

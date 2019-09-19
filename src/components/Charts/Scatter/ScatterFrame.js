@@ -105,7 +105,8 @@ class ScatterFrame extends Component {
 
     render() {
         const { classes, color, variableX, normalizerX, 
-                storage, projectName,variableY, normalizerY, groups} = this.props;
+                storage, projectName,variableY, normalizerY, 
+                groups, normalizerData} = this.props;
         const colors = colormaps[color][10];
 
         const { stacked, curve, selectedKeys } = this.state;
@@ -149,10 +150,32 @@ class ScatterFrame extends Component {
                         if(filteredEntries[year][item]===undefined) 
                             filteredEntries[year][item]=[];
                         
-                        const variableEntryX = Number(storage[variableX][item][year]);
+                        var variableEntryX = Number(storage[variableX][item][year]);
                         if(storage[variableY][item]!==undefined){
-                            const variableEntryY = Number(storage[variableY][item][year]);
-                            if (normalizerX === "None") {
+                            var variableEntryY = Number(storage[variableY][item][year]);
+                            if (normalizerX !== "None") {
+                                if( normalizerData[normalizerX].hasOwnProperty(item) &&
+                                    normalizerData[normalizerX][item].hasOwnProperty(year) &&
+                                    parseFloat(normalizerData[normalizerX][item][year]) !== 0){
+                                        const normalizer_x = normalizerData[normalizerX][item][year];
+                                        variableEntryX /= normalizer_x;
+                                }else{
+                                    variableEntryX = null;
+                                }
+                            }
+
+                            if (normalizerY !== "None") {
+                                if( normalizerData[normalizerY].hasOwnProperty(item) &&
+                                    normalizerData[normalizerY][item].hasOwnProperty(year) &&
+                                    parseFloat(normalizerData[normalizerY][item][year]) !== 0){
+                                        const normalizer_y = normalizerData[normalizerY][item][year];
+                                        variableEntryY /= normalizer_y;
+                                }else{
+                                    variableEntryY = null;
+                                }
+                            }
+                            
+                            if(variableEntryX !== null && variableEntryY !==null){
                                 filteredEntries[year][item].push({
                                     "x":variableEntryX,
                                     "y":variableEntryY,
@@ -165,25 +188,8 @@ class ScatterFrame extends Component {
                                 if(max_y[year]===undefined || max_y[year]<variableEntryY) 
                                     max_y[year] = variableEntryY;
                             }
+
                         }
-                        
-                        // else {
-                        //     const normalizer = normalizerData[dataKey]
-                        //     // pair = [t_year, t_value]
-                        //     normalizedEntry = Object.entries(variableEntry).map(pair => {
-                        //         if (parseFloat(normalizer[pair[0]]) === 0) {
-                        //             return {
-                        //                 "x": pair[0],
-                        //                 "y": null
-                        //             }
-                        //         } else {
-                        //             return {
-                        //                 "x": pair[0],
-                        //                 "y": pair[1] / normalizer[pair[0]]
-                        //             }
-                        //         }
-                        //     })
-                        // }
                     }
                 })
                 
@@ -198,14 +204,18 @@ class ScatterFrame extends Component {
             });
         }
 
+        const titleX = normalizerX === "None" ? variableX : variableX + " / " + normalizerX;
+        const titleY = normalizerY === "None" ? variableY : variableY + " / " + normalizerY;
+
+
         // ------------------------------------- block -------------------------------
         const show = Object.keys(groups).length > 1;
         return (
             <Grid container direction="row" justify="center" alignItems="flex-start">
                 <Grid item xs={12} sm={12} md={show ? 9 : 12} lg={show ? 9 : 12}>
                     <ScatterGraph
-                        titleX={variableX}
-                        titleY={variableY}
+                        titleX={titleX}
+                        titleY={titleY}
                         dataGenerator={filteredData}
                         colors={colors}
                         max_y = {max_y}

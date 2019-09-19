@@ -96,7 +96,7 @@ class LineFrame extends Component {
     }
 
     render() {
-        const { classes, color, variableName, variableX, normalizerX, storage, projectName } = this.props;
+        const { classes, color, variableName, variableX, normalizerX, storage, projectName, normalizerData } = this.props;
         const colors = colormaps[color][10];
 
         const { stacked, curve, selectedKeys } = this.state;
@@ -142,25 +142,18 @@ class LineFrame extends Component {
                             
                             if(varKey==="3" && dataKey==="Livestock Head Total") console.log("HERE")
                             var variableEntryValue = Number(storage[dataKey][varKey][year]);
-                            // if (normalizerX !== "None") normalizedEntry.data[year] += Number(variableEntryValue);
-                            //     const normalizer = normalizerData[dataKey]
-                            //     // pair = [t_year, t_value]
-                            //     normalizedEntry = Object.entries(variableEntry).map(pair => {
-                            //         if (parseFloat(normalizer[pair[0]]) === 0) {
-                            //             return {
-                            //                 "x": pair[0],
-                            //                 "y": null
-                            //             }
-                            //         } else {
-                            //             return {
-                            //                 "x": pair[0],
-                            //                 "y": pair[1] / normalizer[pair[0]]
-                            //             }
-                            //         }
-                            //     })
-                            // }
+                            if (normalizerX !== "None"){
 
-                            normalizedEntry.data[year] += variableEntryValue;
+                                if( normalizerData[normalizerX].hasOwnProperty(varKey) &&
+                                    normalizerData[normalizerX][varKey].hasOwnProperty(year) &&
+                                    parseFloat(normalizerData[normalizerX][varKey][year]) !== 0){
+
+                                    const normalizer = normalizerData[normalizerX][varKey][year];
+                                    normalizedEntry.data[year] += variableEntryValue/normalizer;
+
+                                }else normalizedEntry.data[year] = undefined;
+
+                            }else normalizedEntry.data[year] += variableEntryValue;
 
                         }else normalizedEntry.data[year] = undefined;
                     };

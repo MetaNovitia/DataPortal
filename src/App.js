@@ -31,6 +31,7 @@ class TopicTabs extends Component {
             projectData: undefined,
             projects: undefined,    // this stores all the avaible project names
             projectIndex: -1,         // index of the project that is currently selected.
+            normalizerData: undefined
         }
 
         this.storage = {};
@@ -39,17 +40,29 @@ class TopicTabs extends Component {
         this.setProject = this.setProject.bind(this);
         this.setInit = this.setInit.bind(this);
         this.setData = this.setData.bind(this);
+        this.setNormalizer = this.setNormalizer.bind(this);
+        this.getNormalizer = this.getNormalizer.bind(this);
         this.handleTabChange = this.handleTabChange.bind(this);
+    }
+
+    setNormalizer(n_data, fetched_projects){
+        this.setState({
+            projectIndex: 0,
+            projectData: fetched_projects,
+            projects: Object.keys(fetched_projects),
+            normalizerData: n_data
+        });
+    }
+
+    getNormalizer(fetched_projects){
+        const n_data = require("./data/new/get/normalizer.json");
+        this.setNormalizer(n_data, fetched_projects);
     }
 
     setInit(fetched_projects, fetched_data) {
         const projectName = Object.keys(fetched_projects)[0];
         this.storage[projectName] = fetched_data;
-        this.setState({
-            projectIndex: 0,
-            projectData: fetched_projects,
-            projects: Object.keys(fetched_projects)
-        });
+        this.getNormalizer(fetched_projects);
     }
 
     setProject(fetched_projects) {
@@ -91,7 +104,7 @@ class TopicTabs extends Component {
 
     render() {
 
-        const { projectData, projects, projectIndex } = this.state;
+        const { projectData, projects, projectIndex, normalizerData } = this.state;
         const { classes } = this.props; // style classes
 
         if (projects === undefined) {
@@ -129,6 +142,7 @@ class TopicTabs extends Component {
                         projectName={projectName}
                         projectData={projectData[projectName]}
                         storage={this.storage[projectName]}
+                        normalizerData={normalizerData}
                     />
                 </div>
             </div>

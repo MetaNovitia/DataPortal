@@ -60,7 +60,7 @@ class ChartsContainer extends Component {
     }
 
     render() {
-        const { classes, projectName, projectData } = this.props;
+        const { classes, projectName, projectData, normalizerData } = this.props;
         const { graphIndex } = this.state;  // this is index of chart 
 
         return (
@@ -89,7 +89,8 @@ class ChartsContainer extends Component {
                     storage={this.props.storage}
                     projectData={projectData}
                     projectName={projectName} 
-                    graphIndex={graphIndex} />
+                    graphIndex={graphIndex} 
+                    normalizerData={normalizerData}/>
 
                 {/* <br />
                 <div className={classes.downloadButton}>

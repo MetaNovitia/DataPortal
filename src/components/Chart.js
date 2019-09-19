@@ -132,7 +132,7 @@ class Chart extends Component {
 
     render() {
 
-        const { classes, projectName, graphIndex, projectData, storage } = this.props
+        const { classes, projectName, graphIndex, projectData, storage, normalizerData } = this.props
 
         const { topicName, normalizerX, color, variableX,variableY,normalizerY } = this.state
 
@@ -156,6 +156,7 @@ class Chart extends Component {
                 variableX={items}
                 variableName={variableX}
                 normalizerX={normalizerX}
+                normalizerData={normalizerData}
 
                 color={color}
 
@@ -167,6 +168,7 @@ class Chart extends Component {
 
                 variableName={variableX}
                 normalizerX={normalizerX}
+                normalizerData={normalizerData}
 
                 color={color}
 
@@ -179,6 +181,7 @@ class Chart extends Component {
 
                 variableX={variableX}
                 normalizerX={normalizerX}
+                normalizerData={normalizerData}
 
                 variableY={variableY}
                 normalizerY={normalizerY}
@@ -203,7 +206,7 @@ class Chart extends Component {
                     <Grid item xs={12} sm={gridLayout} md={gridLayout} lg={gridLayout} className={classes.gridContainer}>
                         <FormControl variant="outlined" className={classes.formControl}>
                             <TextField select
-                                // disabled={0!==graphIndex && 1!==graphIndex}
+                                disabled={1===graphIndex}
                                 variant="outlined"
                                 label="Group By"
                                 onChange={this.handleChange}
@@ -259,7 +262,7 @@ class Chart extends Component {
                         </FormControl>
                         <FormControl variant="outlined" className={classes.formControl}>
                             <TextField select
-                                disabled
+                                // disabled
                                 variant="outlined"
                                 label="Normalizer"
                                 onChange={this.handleChange}
@@ -269,7 +272,7 @@ class Chart extends Component {
                                 InputLabelProps={{ shrink: true }}
                             >
                                 <MenuItem key={"None"} value={"None"}>None</MenuItem>
-                                {variableNames.map(key => (
+                                {Object.keys(normalizerData).map(key => (
                                     <MenuItem key={key} value={key}>
                                         {key}
                                     </MenuItem>
@@ -298,7 +301,7 @@ class Chart extends Component {
                         </FormControl>
                         <FormControl variant="outlined" style={{ width: "100%", marginTop: "10px" }}>
                             <TextField select
-                                disabled
+                                // disabled
                                 variant="outlined"
                                 label="Normalizer Y"
                                 onChange={this.handleChange}
@@ -310,7 +313,7 @@ class Chart extends Component {
                                 <MenuItem key={"None"} value={"None"}>
                                     None
                             </MenuItem>
-                                {variableNames.map(key => (
+                                {Object.keys(normalizerData).map(key => (
                                     <MenuItem key={key} value={key}>
                                         {key}
                                     </MenuItem>
