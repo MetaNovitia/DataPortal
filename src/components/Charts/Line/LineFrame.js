@@ -61,6 +61,47 @@ class LineFrame extends Component {
         this.checkBox = this.checkBox.bind(this);
     }
 
+	cleanUpData(data) {
+		function linearInterpolation(numNull, indexPrev, indexNext, dataVals) {
+			if (indexPrev === null && indexNext === null)
+				return;
+			for (var i = indexPrev + 1; i < indexNext; ++i)
+				dataVals[i]["y"] = -1
+			if (dataVals[indexPrev]["y"] == null && dataVals[indexNext]["y"] != null) {
+				for (var i = indexPrev + 1; i < indexNext; ++i)
+					dataVals[i]["y"] = dataVals[indexNext]["y"]
+			} else if (dataVals[indexPrev]["y"] != null && dataVals[indexNext]["y"] == null) {
+				for (var i = indexPrev + 1; i < indexNext; ++i)
+					dataVals[i]["y"] = dataVals[indexPrev]["y"]
+			} else if (dataVals[indexPrev]["y"] != null && dataVals[indexNext]["y"] != null) {
+				var incrementBy = (dataVals[indexNext]["y"] - dataVals[indexPrev]["y"]) / numNull
+				for (var i = indexPrev + 1; i < indexNext; ++i)
+					dataVals[i]["y"] = dataVals[indexPrev]["y"] + ((i - indexPrev - 1) * incrementBy)
+			}
+		}
+
+		for (var i = 0; i < data.length; ++i) {
+			var prevIndex = null
+			for (var j = 0; j < data[i]["data"].length; ++j) {
+				var nextIndex = null
+				if (data[i]["data"][j]["y"] != null)
+					prevIndex = j
+				else if (data[i]["data"][j]["y"] == null) {
+					var nullCount = 0
+					while (j < data[i]["data"].length && data[i]["data"][j]["y"] == null) {
+						++nullCount
+						++j
+					}
+					if (j < data[i]["data"].length)
+						nextIndex = j
+					linearInterpolation(nullCount, prevIndex, nextIndex, data[i]["data"])
+				}
+			}
+		}
+
+
+	}
+
     // ============================ Input Handlers ========================== //
     checkBox(event, checked) {
         const { selectedKeys } = this.state
@@ -115,96 +156,99 @@ class LineFrame extends Component {
         var max_value = undefined;
         var stacked_values = [];
         var max_stacked = undefined;
+		if(selectedKeys.length>0) {
+	
+		    var min_year = undefined;
+		    var max_year = undefined;
 
-        if(selectedKeys.length>0){
+			console.log("--------------")
+			console.log(selectedKeys)
+		    
+		    selectedKeys.sort().forEach(dataKey => {
+	
+		        var normalizedEntry = {"id":dataKey};
+	
+		        variableX.forEach(varKey => {
+		            // initialize
+		            if(normalizedEntry.data===undefined){
+		                normalizedEntry.data = {};
+		                for(year in storage[dataKey][varKey]) normalizedEntry.data[year] = 0;
+		            }
+	
+		            for(year in normalizedEntry.data){
+		                if( storage[dataKey][varKey]        !== undefined &&    // missing item
+		                    storage[dataKey][varKey][year]  !== undefined &&    // missing year of item
+		                    normalizedEntry.data[year]      !== undefined)      // missing year of other items
+		                {
+		                    
+		                    var variableEntryValue = Number(storage[dataKey][varKey][year]);
+		                    if (normalizerX !== "None"){
+	
+		                        if( normalizerData[normalizerX].hasOwnProperty(varKey) &&
+		                            normalizerData[normalizerX][varKey].hasOwnProperty(year) &&
+		                            parseFloat(normalizerData[normalizerX][varKey][year]) !== 0){
+	
+		                            const normalizer = normalizerData[normalizerX][varKey][year];
+		                            normalizedEntry.data[year] += variableEntryValue/normalizer;
+	
+		                        }else normalizedEntry.data[year] = undefined;
+	
+		                    }else normalizedEntry.data[year] += variableEntryValue;
+	
+		                }else normalizedEntry.data[year] = undefined;
+		            };
+		        })
+	
+		        const years = Object.keys(normalizedEntry.data);
+		        const this_min_year = Math.min(...years);
+		        const this_max_year = Math.max(...years);
+	
+		        if(min_year===undefined || this_min_year < min_year) min_year = this_min_year;
+		        if(max_year===undefined || this_max_year > max_year) max_year = this_max_year;
+	
+		        filteredEntries.push(normalizedEntry);
+		    })
+	
+		    for(year=min_year; year<=max_year; year++) stacked_values.push(0);
+	
+		    filteredData = filteredEntries.map(entry => {
+		        var normalizedData = [];
+		        for(year=min_year; year<=max_year; year++){
+		            if(entry.data[year]===undefined){
+		                entry.data[year]=null;
+		                stacked_values[year-min_year] = null;
+		            }
+		            else{
+		                var val = entry.data[year];
+		                if(min_value===undefined || val < min_value) min_value = val;
+		                if(max_value===undefined || val > max_value) max_value = val;
+		                if(stacked_values[year-min_year]!==null) 
+		                    stacked_values[year-min_year] += val;
+		            }
+	
+		            normalizedData.push({
+		                "x": year.toString(),
+		                "y": entry.data[year]
+		            })
+		        }
+	
+		        return {
+		            "data": normalizedData,
+		            "id": entry.id
+		        }
+		    });
+		}
 
-            var min_year = undefined;
-            var max_year = undefined;
-            
-            selectedKeys.sort().forEach(dataKey => {
+		this.cleanUpData(filteredData)
 
-                var normalizedEntry = {"id":dataKey};
-
-                variableX.forEach(varKey => {
-                    // initialize
-                    if(normalizedEntry.data===undefined){
-                        normalizedEntry.data = {};
-                        for(year in storage[dataKey][varKey]) normalizedEntry.data[year] = 0;
-                    }
-
-                    // loop, will be undefined if not all variables have the value in that year
-                    if(varKey==="3" && dataKey==="Livestock Head Total") console.log(storage[dataKey][varKey])
-                    for(year in normalizedEntry.data){
-                        if( storage[dataKey][varKey]        !== undefined &&    // missing item
-                            storage[dataKey][varKey][year]  !== undefined &&    // missing year of item
-                            normalizedEntry.data[year]      !== undefined)      // missing year of other items
-                        {
-                            
-                            if(varKey==="3" && dataKey==="Livestock Head Total") console.log("HERE")
-                            var variableEntryValue = Number(storage[dataKey][varKey][year]);
-                            if (normalizerX !== "None"){
-
-                                if( normalizerData[normalizerX].hasOwnProperty(varKey) &&
-                                    normalizerData[normalizerX][varKey].hasOwnProperty(year) &&
-                                    parseFloat(normalizerData[normalizerX][varKey][year]) !== 0){
-
-                                    const normalizer = normalizerData[normalizerX][varKey][year];
-                                    normalizedEntry.data[year] += variableEntryValue/normalizer;
-
-                                }else normalizedEntry.data[year] = undefined;
-
-                            }else normalizedEntry.data[year] += variableEntryValue;
-
-                        }else normalizedEntry.data[year] = undefined;
-                    };
-                })
-
-                const years = Object.keys(normalizedEntry.data);
-                const this_min_year = Math.min(...years);
-                const this_max_year = Math.max(...years);
-
-                if(min_year===undefined || this_min_year < min_year) min_year = this_min_year;
-                if(max_year===undefined || this_max_year > max_year) max_year = this_max_year;
-
-                filteredEntries.push(normalizedEntry);
-            })
-
-            for(year=min_year; year<=max_year; year++) stacked_values.push(0);
-
-            filteredData = filteredEntries.map(entry => {
-                var normalizedData = [];
-                for(year=min_year; year<=max_year; year++){
-                    if(entry.data[year]===undefined){
-                        entry.data[year]=null;
-                        stacked_values[year-min_year] = null;
-                    }
-                    else{
-                        var val = entry.data[year];
-                        if(min_value===undefined || val < min_value) min_value = val;
-                        if(max_value===undefined || val > max_value) max_value = val;
-                        if(stacked_values[year-min_year]!==null) 
-                            stacked_values[year-min_year] += val;
-                    }
-
-                    normalizedData.push({
-                        "x": year.toString(),
-                        "y": entry.data[year]
-                    })
-                }
-
-                return {
-                    "data": normalizedData,
-                    "id": entry.id
-                }
-            });
-        }
 
         stacked_values.forEach(item => {
             if(item !== null && (max_stacked===undefined || max_stacked < item)) max_stacked = item;
         })
 
-        // ------------------------------------- block -------------------------------
 
+        // ------------------------------------- block -------------------------------
+		
         return (
             <Grid container direction="row" justify="center" alignItems="flex-start">
                 <Grid item xs={12} sm={12} md={9} lg={9}>
